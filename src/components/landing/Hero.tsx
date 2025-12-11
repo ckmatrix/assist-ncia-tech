@@ -39,7 +39,7 @@ const Hero = () => {
   return (
     <section className="pt-32 pb-20 px-4 overflow-hidden">
       <div className="container mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="space-y-8 animate-fade-up">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
               <span className="relative flex h-2 w-2">
@@ -60,24 +60,29 @@ const Hero = () => {
             </p>
 
             {/* Destaque de proteção */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-primary" />
-                <span className="font-semibold text-foreground">Anexos na OS — acesso para você e seu cliente</span>
+            <div className="relative bg-gradient-to-r from-primary/15 via-primary/10 to-primary/5 border-l-4 border-primary rounded-r-xl p-5 shadow-md">
+              <div className="absolute -top-2 -left-2 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                DESTAQUE
               </div>
-              <p className="text-sm text-muted-foreground">
+              <div className="flex items-center gap-3 mb-3 pt-2">
+                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-primary" />
+                </div>
+                <span className="font-bold text-lg text-foreground">Anexos na OS — acesso para você e seu cliente</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
                 Tudo documentado dentro da ordem de serviço. Proteção garantida para ambos.
               </p>
-              <div className="flex flex-wrap gap-6">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-2 text-sm bg-background/60 px-3 py-1.5 rounded-full border border-border">
                   <Camera className="w-4 h-4 text-primary" />
                   <span>Fotos do aparelho</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm bg-background/60 px-3 py-1.5 rounded-full border border-border">
                   <Video className="w-4 h-4 text-primary" />
                   <span>Vídeos de funcionamento</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm bg-background/60 px-3 py-1.5 rounded-full border border-border">
                   <Shield className="w-4 h-4 text-primary" />
                   <span>Informações detalhadas</span>
                 </div>
@@ -109,9 +114,9 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="relative animate-fade-up" style={{ animationDelay: "0.2s" }}>
-            <div className="absolute -inset-4 bg-gradient-hero rounded-3xl opacity-20 blur-3xl"></div>
-            <div className="relative bg-card rounded-2xl shadow-xl border border-border overflow-hidden">
+          <div className="relative animate-fade-up lg:scale-110 lg:translate-x-4" style={{ animationDelay: "0.2s" }}>
+            <div className="absolute -inset-6 bg-gradient-hero rounded-3xl opacity-25 blur-3xl"></div>
+            <div className="relative bg-card rounded-2xl shadow-2xl border border-border overflow-hidden">
               {heroData.map((item, index) => (
                 <img 
                   key={index}
