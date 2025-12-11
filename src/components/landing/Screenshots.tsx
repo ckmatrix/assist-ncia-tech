@@ -96,22 +96,25 @@ const Screenshots = () => {
               {activeTab === "cliente" && (
                 <div className="absolute bottom-6 left-6 right-6 animate-fade-in">
                   <div className="bg-card/95 backdrop-blur-sm border border-border rounded-xl p-4 shadow-lg">
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2 mb-2">
                       <Shield className="w-5 h-5 text-primary" />
-                      <span className="font-semibold text-foreground">Proteção garantida para você e seu cliente</span>
+                      <span className="font-semibold text-foreground">Anexos na OS — acesso para você e seu cliente</span>
                     </div>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      Tudo documentado dentro da ordem de serviço. Proteção garantida para ambos.
+                    </p>
                     <div className="flex flex-wrap gap-4">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Camera className="w-4 h-4 text-primary" />
-                        <span>Anexe fotos do aparelho</span>
+                        <span>Fotos do aparelho</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Video className="w-4 h-4 text-primary" />
-                        <span>Grave vídeos de funcionamento</span>
+                        <span>Vídeos de funcionamento</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Shield className="w-4 h-4 text-primary" />
-                        <span>Registre informações detalhadas</span>
+                        <span>Informações detalhadas</span>
                       </div>
                     </div>
                   </div>

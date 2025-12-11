@@ -28,22 +28,25 @@ const Hero = () => {
 
             {/* Destaque de proteção */}
             <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-2 mb-2">
                 <Shield className="w-5 h-5 text-primary" />
-                <span className="font-semibold text-foreground">Proteja seu negócio e seus clientes</span>
+                <span className="font-semibold text-foreground">Anexos direto na OS — você e o cliente têm acesso</span>
               </div>
+              <p className="text-sm text-muted-foreground mb-3">
+                Documente tudo dentro da ordem de serviço. Proteção garantida para ambos os lados.
+              </p>
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Camera className="w-4 h-4 text-primary" />
-                  <span>Anexe fotos do aparelho</span>
+                  <span>Fotos do aparelho</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Video className="w-4 h-4 text-primary" />
-                  <span>Grave vídeos de funcionamento</span>
+                  <span>Vídeos de funcionamento</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Shield className="w-4 h-4 text-primary" />
-                  <span>Registre informações detalhadas</span>
+                  <span>Informações detalhadas</span>
                 </div>
               </div>
             </div>
