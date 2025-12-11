@@ -1,12 +1,17 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ArrowRight, Play, CheckCircle, Camera, Video, Shield, X } from "lucide-react";
+import { ArrowRight, Play, CheckCircle, Camera, Video, Shield } from "lucide-react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 
 const Hero = () => {
-  const [videoOpen, setVideoOpen] = useState(false);
-  
+  const scrollToDemo = () => {
+    const demoSection = document.getElementById("demo-section");
+    if (demoSection) {
+      demoSection.scrollIntoView({ behavior: "smooth" });
+      // Dispatch custom event to change tab to "cliente"
+      window.dispatchEvent(new CustomEvent("showClienteDemo"));
+    }
+  };
+
   return (
     <section className="pt-32 pb-20 px-4 overflow-hidden">
       <div className="container mx-auto">
@@ -60,29 +65,11 @@ const Hero = () => {
                 Começar Gratuitamente
                 <ArrowRight className="w-5 h-5" />
               </Button>
-              <Button variant="outline" size="lg" onClick={() => setVideoOpen(true)}>
+              <Button variant="outline" size="lg" onClick={scrollToDemo}>
                 <Play className="w-5 h-5" />
                 Ver Demonstração
               </Button>
             </div>
-
-            {/* Modal de Vídeo */}
-            <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
-              <DialogContent className="max-w-4xl p-0 bg-black border-none overflow-hidden">
-                <button 
-                  onClick={() => setVideoOpen(false)}
-                  className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-                <video 
-                  src="/videos/painel-cliente.mov"
-                  autoPlay
-                  controls
-                  className="w-full h-auto max-h-[80vh]"
-                />
-              </DialogContent>
-            </Dialog>
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-4">
               {[

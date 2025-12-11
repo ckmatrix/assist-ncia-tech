@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Camera, Video, Shield } from "lucide-react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import acompanhamentoOs from "@/assets/screenshots/acompanhamento-os.png";
@@ -10,7 +10,7 @@ const tabs = [
   { id: "dashboard", label: "Dashboard", description: "Visão geral com métricas e relatórios em tempo real", image: painelRelatorios, isVideo: false },
   { id: "os", label: "Ordens de Serviço", description: "Gerencie todas as OS com filtros e status", image: acompanhamentoOs, isVideo: false },
   { id: "cadastro", label: "Cadastro OS", description: "Cadastre novas ordens de serviço rapidamente", image: cadastroOs, isVideo: false },
-  { id: "cliente", label: "Painel Cliente", description: "Área do cliente para acompanhamento online", video: "/videos/painel-cliente.mov", isVideo: true },
+  { id: "cliente", label: "Painel Cliente", description: "Exemplo do painel web do cliente", video: "/videos/painel-cliente.mov", isVideo: true },
   { id: "financeiro", label: "Financeiro", description: "Controle de receitas, despesas e fluxo de caixa", image: relatoriosLoja, isVideo: false }
 ];
 
@@ -18,8 +18,17 @@ const Screenshots = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const activeTabData = tabs.find(t => t.id === activeTab);
 
+  useEffect(() => {
+    const handleShowDemo = () => {
+      setActiveTab("cliente");
+    };
+    
+    window.addEventListener("showClienteDemo", handleShowDemo);
+    return () => window.removeEventListener("showClienteDemo", handleShowDemo);
+  }, []);
+
   return (
-    <section className="py-20 px-4">
+    <section id="demo-section" className="py-20 px-4">
       <div className="container mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-primary font-semibold text-sm uppercase tracking-wider">
