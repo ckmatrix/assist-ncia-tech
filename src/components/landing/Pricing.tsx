@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 
 const plans = [
   {
@@ -51,6 +51,14 @@ const plans = [
   }
 ];
 
+const WHATSAPP_NUMBER = "5511996053510";
+const WHATSAPP_MESSAGE = encodeURIComponent("Olá! Tenho interesse no sistema Assistência Tech. Gostaria de saber mais informações.");
+
+const handleWhatsAppClick = (planName: string) => {
+  const message = encodeURIComponent(`Olá! Tenho interesse no plano ${planName} do sistema Assistência Tech.`);
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
+};
+
 const Pricing = () => {
   return (
     <section id="pricing" className="py-20 px-4">
@@ -71,34 +79,36 @@ const Pricing = () => {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative bg-card rounded-2xl p-8 border ${
+              className={`relative bg-card rounded-2xl p-8 border transition-all duration-500 group cursor-pointer ${
                 plan.popular 
-                  ? "border-primary shadow-xl scale-105" 
-                  : "border-border"
-              } transition-all duration-300 hover:shadow-lg`}
+                  ? "border-primary shadow-xl scale-105 hover:scale-110 hover:shadow-2xl hover:shadow-primary/20" 
+                  : "border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2"
+              }`}
+              onClick={() => handleWhatsAppClick(plan.name)}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="bg-gradient-hero text-primary-foreground text-xs font-semibold px-4 py-1.5 rounded-full">
+                  <span className="bg-gradient-hero text-primary-foreground text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-1.5 animate-pulse">
+                    <Sparkles className="w-3 h-3" />
                     Mais Popular
                   </span>
                 </div>
               )}
 
               <div className="text-center mb-8">
-                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">{plan.name}</h3>
                 <p className="text-muted-foreground text-sm mb-4">{plan.description}</p>
                 <div className="flex items-baseline justify-center gap-1">
                   {!plan.isCustom && <span className="text-sm text-muted-foreground">R$</span>}
-                  <span className={`font-extrabold ${plan.isCustom ? "text-3xl" : "text-5xl"}`}>{plan.price}</span>
+                  <span className={`font-extrabold group-hover:text-primary transition-colors ${plan.isCustom ? "text-3xl" : "text-5xl"}`}>{plan.price}</span>
                   {!plan.isCustom && <span className="text-muted-foreground">/mês</span>}
                 </div>
               </div>
 
               <ul className="space-y-4 mb-8">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-3">
-                    <div className="w-5 h-5 bg-success/20 rounded-full flex items-center justify-center flex-shrink-0">
+                  <li key={feature} className="flex items-center gap-3 group-hover:translate-x-1 transition-transform">
+                    <div className="w-5 h-5 bg-success/20 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-success/30 group-hover:scale-110 transition-all">
                       <Check className="w-3 h-3 text-success" />
                     </div>
                     <span className="text-sm">{feature}</span>
@@ -108,8 +118,16 @@ const Pricing = () => {
 
               <Button 
                 variant={plan.popular ? "hero" : "outline"} 
-                className="w-full"
+                className={`w-full transition-all duration-300 ${
+                  plan.popular 
+                    ? "group-hover:shadow-lg group-hover:shadow-primary/30" 
+                    : "group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary"
+                }`}
                 size="lg"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleWhatsAppClick(plan.name);
+                }}
               >
                 {plan.isCustom ? "Falar com Consultor" : "Começar Agora"}
               </Button>

@@ -34,7 +34,7 @@ const CookieConsent = () => {
             </button>.
           </p>
         </div>
-        <Button onClick={handleAccept} size="sm" className="shrink-0">
+        <Button onClick={handleAccept} variant="hero" size="sm" className="shrink-0">
           Aceitar Cookies
         </Button>
       </div>
