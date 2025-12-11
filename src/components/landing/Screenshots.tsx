@@ -3,10 +3,12 @@ import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import acompanhamentoOs from "@/assets/screenshots/acompanhamento-os.png";
 import painelCliente from "@/assets/screenshots/painel-cliente.png";
 import relatoriosLoja from "@/assets/screenshots/relatorios-loja.png";
+import cadastroOs from "@/assets/screenshots/cadastro-os.png";
 
 const tabs = [
   { id: "dashboard", label: "Dashboard", description: "Visão geral com métricas e relatórios em tempo real", image: painelRelatorios },
   { id: "os", label: "Ordens de Serviço", description: "Gerencie todas as OS com filtros e status", image: acompanhamentoOs },
+  { id: "cadastro", label: "Cadastro OS", description: "Cadastre novas ordens de serviço rapidamente", image: cadastroOs },
   { id: "cliente", label: "Painel Cliente", description: "Área do cliente para acompanhamento online", image: painelCliente },
   { id: "financeiro", label: "Financeiro", description: "Controle de receitas, despesas e fluxo de caixa", image: relatoriosLoja }
 ];
