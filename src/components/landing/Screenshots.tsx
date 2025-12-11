@@ -62,12 +62,16 @@ const Screenshots = () => {
               </span>
             </div>
             
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden flex items-center justify-center bg-secondary/30 min-h-[400px]">
               <img 
                 key={activeTab}
                 src={activeTabData?.image} 
                 alt={activeTabData?.label}
-                className="w-full h-auto animate-fade-in"
+                className={`animate-fade-in ${
+                  activeTab === "cadastro" 
+                    ? "max-h-[500px] w-auto object-contain" 
+                    : "w-full h-auto"
+                }`}
               />
             </div>
           </div>
