@@ -1,5 +1,3 @@
-import { Wrench } from "lucide-react";
-
 const Footer = () => {
   return (
     <footer className="bg-card border-t border-border py-12 px-4">
@@ -8,9 +6,9 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-gradient-hero rounded-xl flex items-center justify-center">
-                <Wrench className="w-5 h-5 text-primary-foreground" />
+                <span className="text-primary-foreground font-bold text-sm">AT</span>
               </div>
-              <span className="text-xl font-bold">TechAssist</span>
+              <span className="text-xl font-bold">Assistência Tech</span>
             </div>
             <p className="text-muted-foreground text-sm">
               Sistema completo de gestão para assistências técnicas.
@@ -50,7 +48,7 @@ const Footer = () => {
 
         <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-sm">
-            © 2025 TechAssist. Todos os direitos reservados.
+            © 2025 Assistência Tech. Todos os direitos reservados.
           </p>
           <div className="flex gap-6">
             <a href="#" className="text-muted-foreground hover:text-foreground text-sm transition-colors">Termos de Uso</a>
