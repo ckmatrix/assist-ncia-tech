@@ -4,7 +4,7 @@ import { Check } from "lucide-react";
 const plans = [
   {
     name: "Básico",
-    price: "99",
+    price: "29,90",
     description: "Ideal para assistências pequenas",
     features: [
       "Até 100 OS por mês",
@@ -13,11 +13,12 @@ const plans = [
       "Relatórios básicos",
       "Suporte por email"
     ],
-    popular: false
+    popular: false,
+    isCustom: false
   },
   {
     name: "Profissional",
-    price: "199",
+    price: "49,90",
     description: "Para assistências em crescimento",
     features: [
       "OS ilimitadas",
@@ -29,11 +30,12 @@ const plans = [
       "Notificações WhatsApp",
       "Suporte prioritário"
     ],
-    popular: true
+    popular: true,
+    isCustom: false
   },
   {
     name: "Enterprise",
-    price: "399",
+    price: "Sob consulta",
     description: "Para redes e franquias",
     features: [
       "Tudo do Profissional",
@@ -44,7 +46,8 @@ const plans = [
       "Gerente de conta dedicado",
       "SLA garantido"
     ],
-    popular: false
+    popular: false,
+    isCustom: true
   }
 ];
 
@@ -86,9 +89,9 @@ const Pricing = () => {
                 <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
                 <p className="text-muted-foreground text-sm mb-4">{plan.description}</p>
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-sm text-muted-foreground">R$</span>
-                  <span className="text-5xl font-extrabold">{plan.price}</span>
-                  <span className="text-muted-foreground">/mês</span>
+                  {!plan.isCustom && <span className="text-sm text-muted-foreground">R$</span>}
+                  <span className={`font-extrabold ${plan.isCustom ? "text-3xl" : "text-5xl"}`}>{plan.price}</span>
+                  {!plan.isCustom && <span className="text-muted-foreground">/mês</span>}
                 </div>
               </div>
 
