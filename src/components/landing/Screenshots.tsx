@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Camera, Video, Shield } from "lucide-react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import acompanhamentoOs from "@/assets/screenshots/acompanhamento-os.png";
 import painelCliente from "@/assets/screenshots/painel-cliente.png";
@@ -90,6 +91,31 @@ const Screenshots = () => {
                       : "max-w-full h-auto max-h-[550px] object-contain rounded-lg"
                   }`}
                 />
+              )}
+              
+              {activeTab === "cliente" && (
+                <div className="absolute bottom-6 left-6 right-6 animate-fade-in">
+                  <div className="bg-card/95 backdrop-blur-sm border border-border rounded-xl p-4 shadow-lg">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Shield className="w-5 h-5 text-primary" />
+                      <span className="font-semibold text-foreground">Proteção garantida para você e seu cliente</span>
+                    </div>
+                    <div className="flex flex-wrap gap-4">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Camera className="w-4 h-4 text-primary" />
+                        <span>Anexe fotos do aparelho</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Video className="w-4 h-4 text-primary" />
+                        <span>Grave vídeos de funcionamento</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Shield className="w-4 h-4 text-primary" />
+                        <span>Registre informações detalhadas</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </div>
