@@ -60,9 +60,9 @@ const Hero = () => {
             </p>
 
             {/* Destaque de proteção */}
-            <div className="relative bg-gradient-to-r from-primary/15 via-primary/10 to-primary/5 border-l-4 border-primary rounded-r-xl p-5 shadow-md">
-              <div className="absolute -top-2 -left-2 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                DESTAQUE
+            <div className="relative pl-1 pt-4">
+              <div className="absolute -top-1 left-0 bg-primary text-primary-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
+                ✨ DESTAQUE
               </div>
               <div className="flex items-center gap-3 mb-3 pt-2">
                 <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
