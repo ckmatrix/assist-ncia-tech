@@ -1,8 +1,24 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, CheckCircle, Camera, Video, Shield } from "lucide-react";
+import { ArrowRight, Play, CheckCircle, Camera, Video, Shield, Wallet } from "lucide-react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
+import painelFinanceiro from "@/assets/screenshots/painel-financeiro.png";
+
+const heroImages = [
+  { src: painelRelatorios, alt: "Painel de Relatórios - Assistência Tech" },
+  { src: painelFinanceiro, alt: "Painel Financeiro - Assistência Tech" },
+];
 
 const Hero = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const scrollToDemo = () => {
     const demoSection = document.getElementById("demo-section");
     if (demoSection) {
@@ -88,21 +104,26 @@ const Hero = () => {
           <div className="relative animate-fade-up" style={{ animationDelay: "0.2s" }}>
             <div className="absolute -inset-4 bg-gradient-hero rounded-3xl opacity-20 blur-3xl"></div>
             <div className="relative bg-card rounded-2xl shadow-xl border border-border overflow-hidden">
-              <img 
-                src={painelRelatorios} 
-                alt="Painel de Relatórios - Assistência Tech"
-                className="w-full h-auto"
-              />
+              {heroImages.map((image, index) => (
+                <img 
+                  key={index}
+                  src={image.src} 
+                  alt={image.alt}
+                  className={`w-full h-auto transition-opacity duration-700 ${
+                    index === currentImageIndex ? "opacity-100" : "opacity-0 absolute inset-0"
+                  }`}
+                />
+              ))}
             </div>
 
             <div className="absolute -bottom-4 -right-4 bg-card rounded-xl shadow-lg border border-border p-4 animate-float">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-success/20 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-5 h-5 text-success" />
+                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+                  <Wallet className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">OS Concluída!</p>
-                  <p className="text-xs text-muted-foreground">iPhone 13 Pro</p>
+                  <p className="text-sm font-medium">A Receber</p>
+                  <p className="text-xs font-semibold text-primary">R$ 1.000,00</p>
                 </div>
               </div>
             </div>
