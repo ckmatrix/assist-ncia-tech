@@ -111,7 +111,7 @@ const Pricing = () => {
                 className="w-full"
                 size="lg"
               >
-                Começar Agora
+                {plan.isCustom ? "Falar com Consultor" : "Começar Agora"}
               </Button>
             </div>
           ))}
