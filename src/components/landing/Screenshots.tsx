@@ -48,9 +48,11 @@ const Screenshots = () => {
           ))}
         </div>
 
-        <div className="relative max-w-6xl mx-auto">
+        <div className="relative max-w-6xl mx-auto flex justify-center">
           <div className="absolute -inset-4 bg-gradient-hero rounded-3xl opacity-10 blur-2xl"></div>
-          <div className="relative bg-card rounded-2xl shadow-2xl border border-border overflow-hidden">
+          <div className={`relative bg-card rounded-2xl shadow-2xl border border-border overflow-hidden ${
+            activeTab === "cadastro" ? "w-auto" : "w-full"
+          }`}>
             <div className="bg-secondary/50 px-4 py-3 border-b border-border flex items-center gap-2">
               <div className="flex gap-1.5">
                 <div className="w-3 h-3 rounded-full bg-destructive/60"></div>
@@ -62,12 +64,20 @@ const Screenshots = () => {
               </span>
             </div>
             
-            <div className="relative overflow-hidden bg-secondary/30 flex items-center justify-center p-4">
+            <div className={`relative overflow-hidden ${
+              activeTab === "cadastro" 
+                ? "" 
+                : "bg-secondary/30 flex items-center justify-center p-4"
+            }`}>
               <img 
                 key={activeTab}
                 src={activeTabData?.image} 
                 alt={activeTabData?.label}
-                className="max-w-full h-auto max-h-[550px] object-contain animate-fade-in rounded-lg"
+                className={`animate-fade-in ${
+                  activeTab === "cadastro"
+                    ? "h-auto max-h-[550px]"
+                    : "max-w-full h-auto max-h-[550px] object-contain rounded-lg"
+                }`}
               />
             </div>
           </div>
