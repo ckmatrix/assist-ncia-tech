@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, CheckCircle } from "lucide-react";
+import { ArrowRight, Play, CheckCircle, Camera, Video, Shield } from "lucide-react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 
 const Hero = () => {
@@ -25,6 +25,28 @@ const Hero = () => {
               Controle ordens de serviço, estoque, financeiro e clientes em um único sistema. 
               Seus clientes acompanham o reparo em tempo real.
             </p>
+
+            {/* Destaque de proteção */}
+            <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Shield className="w-5 h-5 text-primary" />
+                <span className="font-semibold text-foreground">Proteja seu negócio e seus clientes</span>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Camera className="w-4 h-4 text-primary" />
+                  <span>Anexe fotos do aparelho</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Video className="w-4 h-4 text-primary" />
+                  <span>Grave vídeos de funcionamento</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Shield className="w-4 h-4 text-primary" />
+                  <span>Registre informações detalhadas</span>
+                </div>
+              </div>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button variant="hero" size="lg">
