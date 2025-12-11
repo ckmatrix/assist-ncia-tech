@@ -4,9 +4,17 @@ import { ArrowRight, Play, CheckCircle, Camera, Video, Shield, Wallet } from "lu
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import painelFinanceiro from "@/assets/screenshots/painel-financeiro.png";
 
-const heroImages = [
-  { src: painelRelatorios, alt: "Painel de Relatórios - Assistência Tech" },
-  { src: painelFinanceiro, alt: "Painel Financeiro - Assistência Tech" },
+const heroData = [
+  { 
+    src: painelRelatorios, 
+    alt: "Painel de Relatórios - Assistência Tech",
+    badge: { icon: "check", title: "OS Concluída!", subtitle: "iPhone 13 Pro Max" }
+  },
+  { 
+    src: painelFinanceiro, 
+    alt: "Painel Financeiro - Assistência Tech",
+    badge: { icon: "wallet", title: "A Receber", subtitle: "R$ 1.000,00" }
+  },
 ];
 
 const Hero = () => {
@@ -14,7 +22,7 @@ const Hero = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+      setCurrentImageIndex((prev) => (prev + 1) % heroData.length);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -52,15 +60,15 @@ const Hero = () => {
             </p>
 
             {/* Destaque de proteção */}
-            <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
                 <Shield className="w-5 h-5 text-primary" />
-                <span className="font-semibold text-foreground">Anexos direto na OS — você e o cliente têm acesso</span>
+                <span className="font-semibold text-foreground">Anexos na OS — acesso para você e seu cliente</span>
               </div>
-              <p className="text-sm text-muted-foreground mb-3">
-                Documente tudo dentro da ordem de serviço. Proteção garantida para ambos os lados.
+              <p className="text-sm text-muted-foreground">
+                Tudo documentado dentro da ordem de serviço. Proteção garantida para ambos.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-6">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Camera className="w-4 h-4 text-primary" />
                   <span>Fotos do aparelho</span>
@@ -104,11 +112,11 @@ const Hero = () => {
           <div className="relative animate-fade-up" style={{ animationDelay: "0.2s" }}>
             <div className="absolute -inset-4 bg-gradient-hero rounded-3xl opacity-20 blur-3xl"></div>
             <div className="relative bg-card rounded-2xl shadow-xl border border-border overflow-hidden">
-              {heroImages.map((image, index) => (
+              {heroData.map((item, index) => (
                 <img 
                   key={index}
-                  src={image.src} 
-                  alt={image.alt}
+                  src={item.src} 
+                  alt={item.alt}
                   className={`w-full h-auto transition-opacity duration-700 ${
                     index === currentImageIndex ? "opacity-100" : "opacity-0 absolute inset-0"
                   }`}
@@ -118,12 +126,22 @@ const Hero = () => {
 
             <div className="absolute -bottom-4 -right-4 bg-card rounded-xl shadow-lg border border-border p-4 animate-float">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                  <Wallet className="w-5 h-5 text-primary" />
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  heroData[currentImageIndex].badge.icon === "check" ? "bg-success/20" : "bg-primary/20"
+                }`}>
+                  {heroData[currentImageIndex].badge.icon === "check" ? (
+                    <CheckCircle className="w-5 h-5 text-success" />
+                  ) : (
+                    <Wallet className="w-5 h-5 text-primary" />
+                  )}
                 </div>
                 <div>
-                  <p className="text-sm font-medium">A Receber</p>
-                  <p className="text-xs font-semibold text-primary">R$ 1.000,00</p>
+                  <p className="text-sm font-medium">{heroData[currentImageIndex].badge.title}</p>
+                  <p className={`text-xs font-semibold ${
+                    heroData[currentImageIndex].badge.icon === "check" ? "text-muted-foreground" : "text-primary"
+                  }`}>
+                    {heroData[currentImageIndex].badge.subtitle}
+                  </p>
                 </div>
               </div>
             </div>
