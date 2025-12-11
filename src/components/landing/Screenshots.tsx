@@ -6,11 +6,11 @@ import relatoriosLoja from "@/assets/screenshots/relatorios-loja.png";
 import cadastroOs from "@/assets/screenshots/cadastro-os.png";
 
 const tabs = [
-  { id: "dashboard", label: "Dashboard", description: "Visão geral com métricas e relatórios em tempo real", image: painelRelatorios },
-  { id: "os", label: "Ordens de Serviço", description: "Gerencie todas as OS com filtros e status", image: acompanhamentoOs },
-  { id: "cadastro", label: "Cadastro OS", description: "Cadastre novas ordens de serviço rapidamente", image: cadastroOs },
-  { id: "cliente", label: "Painel Cliente", description: "Área do cliente para acompanhamento online", image: painelCliente },
-  { id: "financeiro", label: "Financeiro", description: "Controle de receitas, despesas e fluxo de caixa", image: relatoriosLoja }
+  { id: "dashboard", label: "Dashboard", description: "Visão geral com métricas e relatórios em tempo real", image: painelRelatorios, isVideo: false },
+  { id: "os", label: "Ordens de Serviço", description: "Gerencie todas as OS com filtros e status", image: acompanhamentoOs, isVideo: false },
+  { id: "cadastro", label: "Cadastro OS", description: "Cadastre novas ordens de serviço rapidamente", image: cadastroOs, isVideo: false },
+  { id: "cliente", label: "Painel Cliente", description: "Área do cliente para acompanhamento online", video: "/videos/painel-cliente.mov", isVideo: true },
+  { id: "financeiro", label: "Financeiro", description: "Controle de receitas, despesas e fluxo de caixa", image: relatoriosLoja, isVideo: false }
 ];
 
 const Screenshots = () => {
@@ -69,16 +69,28 @@ const Screenshots = () => {
                 ? "" 
                 : "bg-secondary/30 flex items-center justify-center p-4"
             }`}>
-              <img 
-                key={activeTab}
-                src={activeTabData?.image} 
-                alt={activeTabData?.label}
-                className={`animate-fade-in ${
-                  activeTab === "cadastro"
-                    ? "h-auto max-h-[550px]"
-                    : "max-w-full h-auto max-h-[550px] object-contain rounded-lg"
-                }`}
-              />
+              {activeTabData?.isVideo ? (
+                <video 
+                  key={activeTab}
+                  src={activeTabData?.video}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="max-w-full h-auto max-h-[550px] object-contain animate-fade-in rounded-lg"
+                />
+              ) : (
+                <img 
+                  key={activeTab}
+                  src={activeTabData?.image} 
+                  alt={activeTabData?.label}
+                  className={`animate-fade-in ${
+                    activeTab === "cadastro"
+                      ? "h-auto max-h-[550px]"
+                      : "max-w-full h-auto max-h-[550px] object-contain rounded-lg"
+                  }`}
+                />
+              )}
             </div>
           </div>
         </div>
