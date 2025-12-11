@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, CheckCircle } from "lucide-react";
+import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 
 const Hero = () => {
   return (
@@ -53,31 +54,11 @@ const Hero = () => {
           <div className="relative animate-fade-up" style={{ animationDelay: "0.2s" }}>
             <div className="absolute -inset-4 bg-gradient-hero rounded-3xl opacity-20 blur-3xl"></div>
             <div className="relative bg-card rounded-2xl shadow-xl border border-border overflow-hidden">
-              <div className="bg-secondary/50 px-4 py-3 border-b border-border flex items-center gap-2">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-destructive/60"></div>
-                  <div className="w-3 h-3 rounded-full bg-warning/60"></div>
-                  <div className="w-3 h-3 rounded-full bg-success/60"></div>
-                </div>
-                <span className="text-xs text-muted-foreground ml-2">Painel de Relatórios</span>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="grid grid-cols-2 gap-3">
-                  <StatCard icon="📱" label="Aparelhos" value="12" color="bg-primary/10" />
-                  <StatCard icon="🔧" label="Em Reparo" value="7" color="bg-warning/10" />
-                  <StatCard icon="✅" label="Prontos" value="2" color="bg-success/10" />
-                  <StatCard icon="⏳" label="Análise" value="1" color="bg-info/10" />
-                </div>
-                <div className="bg-secondary/50 rounded-xl p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">Valor Estimado</span>
-                    <span className="text-lg font-bold text-success">R$ 720,00</span>
-                  </div>
-                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-hero w-3/4 rounded-full"></div>
-                  </div>
-                </div>
-              </div>
+              <img 
+                src={painelRelatorios} 
+                alt="Painel de Relatórios - Assistência Tech"
+                className="w-full h-auto"
+              />
             </div>
 
             <div className="absolute -bottom-4 -right-4 bg-card rounded-xl shadow-lg border border-border p-4 animate-float">
@@ -97,17 +78,5 @@ const Hero = () => {
     </section>
   );
 };
-
-const StatCard = ({ icon, label, value, color }: { icon: string; label: string; value: string; color: string }) => (
-  <div className={`${color} rounded-xl p-4`}>
-    <div className="flex items-center gap-3">
-      <span className="text-2xl">{icon}</span>
-      <div>
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="text-xl font-bold">{value}</p>
-      </div>
-    </div>
-  </div>
-);
 
 export default Hero;
