@@ -16,11 +16,28 @@ const tabs = [
 
 const Screenshots = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [isPaused, setIsPaused] = useState(false);
   const activeTabData = tabs.find(t => t.id === activeTab);
+
+  // Auto-rotate tabs every 4 seconds
+  useEffect(() => {
+    if (isPaused) return;
+    
+    const interval = setInterval(() => {
+      setActiveTab(current => {
+        const currentIndex = tabs.findIndex(t => t.id === current);
+        const nextIndex = (currentIndex + 1) % tabs.length;
+        return tabs[nextIndex].id;
+      });
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
   useEffect(() => {
     const handleShowDemo = () => {
       setActiveTab("cliente");
+      setIsPaused(true);
     };
     
     window.addEventListener("showClienteDemo", handleShowDemo);
@@ -46,7 +63,12 @@ const Screenshots = () => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id);
+                setIsPaused(true);
+              }}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
               className={`px-5 py-2.5 rounded-xl font-medium transition-all duration-300 hover:scale-105 ${
                 activeTab === tab.id
                   ? "bg-gradient-hero text-primary-foreground shadow-lg"
