@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Camera, Video, Shield } from "lucide-react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import acompanhamentoOs from "@/assets/screenshots/acompanhamento-os.png";
@@ -17,11 +17,12 @@ const tabs = [
 const Screenshots = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isPaused, setIsPaused] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const activeTabData = tabs.find(t => t.id === activeTab);
 
-  // Auto-rotate tabs every 4 seconds
+  // Auto-rotate tabs every 4 seconds (skip when on video tab)
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || activeTab === "cliente") return;
     
     const interval = setInterval(() => {
       setActiveTab(current => {
@@ -32,12 +33,19 @@ const Screenshots = () => {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [isPaused]);
+  }, [isPaused, activeTab]);
+
+  // Handle video end - move to next tab after video completes one loop
+  const handleVideoEnded = () => {
+    const currentIndex = tabs.findIndex(t => t.id === "cliente");
+    const nextIndex = (currentIndex + 1) % tabs.length;
+    setActiveTab(tabs[nextIndex].id);
+  };
 
   useEffect(() => {
     const handleShowDemo = () => {
       setActiveTab("cliente");
-      setIsPaused(true);
+      setIsPaused(false);
     };
     
     window.addEventListener("showClienteDemo", handleShowDemo);
@@ -103,12 +111,13 @@ const Screenshots = () => {
             }`}>
               {activeTabData?.isVideo ? (
                 <video 
+                  ref={videoRef}
                   key={activeTab}
                   src={activeTabData?.video}
                   autoPlay
-                  loop
                   muted
                   playsInline
+                  onEnded={handleVideoEnded}
                   className="max-w-full h-auto max-h-[550px] object-contain animate-fade-in rounded-lg"
                 />
               ) : (
