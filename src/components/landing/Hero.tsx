@@ -59,30 +59,27 @@ const Hero = () => {
               Seus clientes acompanham o reparo em tempo real.
             </p>
 
-            {/* Destaque de proteção */}
-            <div className="relative pl-1 pt-4">
-              <div className="absolute -top-1 left-0 bg-primary text-primary-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
-                ✨ DESTAQUE
-              </div>
-              <div className="flex items-center gap-3 mb-3 pt-2">
-                <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
+            {/* Seção Anexos na OS */}
+            <div className="bg-gradient-to-r from-primary/5 to-transparent rounded-2xl p-5 border-l-4 border-primary">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-primary/15 rounded-lg flex items-center justify-center">
                   <Shield className="w-5 h-5 text-primary" />
                 </div>
-                <span className="font-bold text-lg text-foreground">Anexos na OS — acesso para você e seu cliente</span>
+                <h3 className="font-semibold text-foreground">Anexos na OS — acesso para você e seu cliente</h3>
               </div>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-muted-foreground mb-4 pl-12">
                 Tudo documentado dentro da ordem de serviço. Proteção garantida para ambos.
               </p>
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center gap-2 text-sm bg-background/60 px-3 py-1.5 rounded-full border border-border">
+              <div className="flex flex-wrap gap-3 pl-12">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Camera className="w-4 h-4 text-primary" />
-                  <span>Fotos do aparelho</span>
+                  <span>Fotos</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm bg-background/60 px-3 py-1.5 rounded-full border border-border">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Video className="w-4 h-4 text-primary" />
-                  <span>Vídeos de funcionamento</span>
+                  <span>Vídeos</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm bg-background/60 px-3 py-1.5 rounded-full border border-border">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Shield className="w-4 h-4 text-primary" />
                   <span>Informações detalhadas</span>
                 </div>
