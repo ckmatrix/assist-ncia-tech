@@ -79,13 +79,13 @@ const FooterModals = ({
           </DialogHeader>
           <div className="space-y-4 text-muted-foreground">
             <p>
-              A <strong className="text-foreground">Assistência Tech</strong> nasceu da necessidade de modernizar e simplificar a gestão de assistências técnicas em todo o Brasil. Fundada em 2020, nossa missão é transformar a forma como oficinas e lojas de assistência técnica gerenciam seus negócios.
+              A <strong className="text-foreground">Assistência Tech</strong> nasceu no segundo semestre de 2025 com a iniciativa de criar um sistema que realmente atenda às dores dos lojistas de assistência técnica, oferecendo qualidade e custo atrativo.
             </p>
             <p>
-              Com uma equipe apaixonada por tecnologia e inovação, desenvolvemos uma plataforma completa que integra todas as funcionalidades necessárias para o dia a dia de uma assistência técnica: desde o cadastro de ordens de serviço até o controle financeiro e gestão de estoque.
+              Entendemos os desafios diários enfrentados por quem trabalha com reparos e manutenção de equipamentos. Por isso, desenvolvemos uma plataforma completa e intuitiva que integra todas as funcionalidades necessárias para o dia a dia de uma assistência técnica: desde o cadastro de ordens de serviço até o controle financeiro e gestão de estoque.
             </p>
             <p>
-              Nossa visão é ser a principal referência em sistemas de gestão para assistências técnicas na América Latina, oferecendo soluções acessíveis e de alta qualidade para negócios de todos os tamanhos.
+              Nossa missão é democratizar o acesso a ferramentas profissionais de gestão, permitindo que assistências técnicas de todos os tamanhos possam organizar seus processos, aumentar a produtividade e oferecer um atendimento de excelência aos seus clientes.
             </p>
             <h3 className="text-lg font-semibold text-foreground pt-4">Nossos Valores</h3>
             <ul className="list-disc list-inside space-y-2">
@@ -95,7 +95,7 @@ const FooterModals = ({
               <li><strong>Acessibilidade:</strong> Preços justos para que todos possam profissionalizar seu negócio.</li>
             </ul>
             <p className="pt-4">
-              Hoje, atendemos mais de 500 assistências técnicas em todo o Brasil, processando milhares de ordens de serviço mensalmente e ajudando nossos clientes a crescerem de forma organizada e profissional.
+              Estamos apenas começando nossa jornada, mas já trabalhamos para ser a principal referência em sistemas de gestão para assistências técnicas no Brasil, ajudando nossos clientes a crescerem de forma organizada e profissional.
             </p>
           </div>
         </DialogContent>
