@@ -28,12 +28,15 @@ const Hero = () => {
   }, []);
 
   const scrollToDemo = () => {
-    const demoSection = document.getElementById("demo-section");
-    if (demoSection) {
-      demoSection.scrollIntoView({ behavior: "smooth" });
-      // Dispatch custom event to change tab to "cliente"
-      window.dispatchEvent(new CustomEvent("showClienteDemo"));
-    }
+    // First dispatch the event to change tab to "cliente"
+    window.dispatchEvent(new CustomEvent("showClienteDemo"));
+    // Then scroll after a small delay to ensure tab is active
+    setTimeout(() => {
+      const demoSection = document.getElementById("demo-section");
+      if (demoSection) {
+        demoSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
   };
 
   return (
