@@ -12,21 +12,7 @@ const WhatsAppButton = () => {
       const cookieConsent = localStorage.getItem("cookieConsent");
       const cookieBannerHeight = !cookieConsent ? 80 : 0;
       
-      const footer = document.querySelector("footer");
-      const windowHeight = window.innerHeight;
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight;
-      
-      // Check if near footer
-      const distanceFromBottom = docHeight - (scrollTop + windowHeight);
-      const footerHeight = footer?.offsetHeight || 200;
-      
-      if (distanceFromBottom < footerHeight) {
-        // Near footer - move button up
-        const overlap = footerHeight - distanceFromBottom;
-        setBottomOffset(Math.max(24, overlap + 24 + cookieBannerHeight));
-      } else if (cookieBannerHeight > 0) {
-        // Cookie banner visible
+      if (cookieBannerHeight > 0) {
         setBottomOffset(24 + cookieBannerHeight);
       } else {
         setBottomOffset(24);
@@ -34,15 +20,9 @@ const WhatsAppButton = () => {
     };
 
     calculateOffset();
-    window.addEventListener("scroll", calculateOffset);
-    window.addEventListener("resize", calculateOffset);
-    
-    // Re-check when cookie consent changes
     const interval = setInterval(calculateOffset, 500);
 
     return () => {
-      window.removeEventListener("scroll", calculateOffset);
-      window.removeEventListener("resize", calculateOffset);
       clearInterval(interval);
     };
   }, []);
