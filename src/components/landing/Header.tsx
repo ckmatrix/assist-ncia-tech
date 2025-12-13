@@ -65,7 +65,7 @@ const Header = () => {
 
           <div className="hidden md:flex items-center gap-3">
             <Button variant="ghost" className="transition-all duration-300 hover:scale-105">Entrar</Button>
-            <Button variant="hero" className="transition-all duration-300 hover:scale-105">Começar Grátis</Button>
+            <Button variant="hero" className="transition-all duration-300 hover:scale-105" onClick={(e) => { e.preventDefault(); document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); }}>Começar Grátis</Button>
           </div>
 
           <button
@@ -116,7 +116,7 @@ const Header = () => {
               </a>
               <div className="flex flex-col gap-2 pt-4">
                 <Button variant="ghost">Entrar</Button>
-                <Button variant="hero">Começar Grátis</Button>
+                <Button variant="hero" onClick={() => { document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); setIsMenuOpen(false); }}>Começar Grátis</Button>
               </div>
             </nav>
           </div>

@@ -34,8 +34,8 @@ const WhatsAppButton = () => {
   return (
     <button
       onClick={handleClick}
-      style={{ bottom: `${bottomOffset}px` }}
-      className="fixed right-6 z-40 w-14 h-14 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110"
+      className="fixed right-6 bottom-6 z-40 w-14 h-14 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group hover:scale-110"
+      style={{ marginBottom: bottomOffset > 24 ? `${bottomOffset - 24}px` : '0' }}
       aria-label="Contato via WhatsApp"
     >
       <MessageCircle className="w-7 h-7 group-hover:scale-110 transition-transform" />
