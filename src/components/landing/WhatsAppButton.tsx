@@ -10,9 +10,9 @@ const WhatsAppButton = () => {
   useEffect(() => {
     const calculateOffset = () => {
       const cookieConsent = localStorage.getItem("cookieConsent");
-      const baseOffset = 80; // posiciona acima dos links do rodapé
+      const baseOffset = 120; // mantém acima da linha de Termos/Privacidade/Cookies
       const cookieBannerHeight = !cookieConsent ? 80 : 0;
-      const extraOffset = !cookieConsent ? 32 : 0;
+      const extraOffset = !cookieConsent ? 40 : 0;
 
       setBottomOffset(baseOffset + cookieBannerHeight + extraOffset);
     };
