@@ -10,13 +10,11 @@ const WhatsAppButton = () => {
   useEffect(() => {
     const calculateOffset = () => {
       const cookieConsent = localStorage.getItem("cookieConsent");
+      const baseOffset = 24;
       const cookieBannerHeight = !cookieConsent ? 80 : 0;
-      
-      if (cookieBannerHeight > 0) {
-        setBottomOffset(24 + cookieBannerHeight);
-      } else {
-        setBottomOffset(24);
-      }
+      const extraOffset = !cookieConsent ? 16 : 0; // deixa um pouco acima do banner
+
+      setBottomOffset(baseOffset + cookieBannerHeight + extraOffset);
     };
 
     calculateOffset();
