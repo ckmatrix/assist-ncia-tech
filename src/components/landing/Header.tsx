@@ -14,6 +14,20 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  const scrollToDemo = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    // Dispara o evento para ativar a aba "cliente"
+    window.dispatchEvent(new CustomEvent('showClienteDemo'));
+    // Rola até a seção demo após um pequeno delay
+    setTimeout(() => {
+      const element = document.getElementById('demo-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-lg border-b border-border">
       <div className="container mx-auto px-4">
@@ -41,8 +55,8 @@ const Header = () => {
               Benefícios
             </a>
             <a 
-              href="#screenshots" 
-              onClick={(e) => scrollToSection(e, 'screenshots')}
+              href="#demo-section" 
+              onClick={scrollToDemo}
               className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-105 relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
             >
               Ver Demonstração
@@ -94,8 +108,8 @@ const Header = () => {
                 Benefícios
               </a>
               <a 
-                href="#screenshots" 
-                onClick={(e) => scrollToSection(e, 'screenshots')}
+                href="#demo-section" 
+                onClick={scrollToDemo}
                 className="text-muted-foreground hover:text-primary transition-all duration-300 px-2 py-1"
               >
                 Ver Demonstração
