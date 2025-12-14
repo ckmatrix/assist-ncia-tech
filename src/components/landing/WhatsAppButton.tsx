@@ -10,18 +10,29 @@ const WhatsAppButton = () => {
   useEffect(() => {
     const calculateOffset = () => {
       const cookieConsent = localStorage.getItem("cookieConsent");
-      const baseOffset = 120; // mantém acima da linha de Termos/Privacidade/Cookies
-      const cookieBannerHeight = !cookieConsent ? 80 : 0;
-      const extraOffset = !cookieConsent ? 40 : 0;
+      const hasCookieBanner = !cookieConsent;
 
-      setBottomOffset(baseOffset + cookieBannerHeight + extraOffset);
+      const baseOffset = 24; // posição padrão, mais próxima da borda inferior
+      const footerExtraOffset = 120; // quanto ele sobe quando encosta na linha de Termos/Privacidade/Cookies
+      const cookieBannerHeight = hasCookieBanner ? 80 : 0;
+      const extraCookieOffset = hasCookieBanner ? 32 : 0;
+
+      const scrolledToFooter =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 160; // ajuste fino da altura do rodapé
+
+      const scrollOffset = scrolledToFooter ? footerExtraOffset : 0;
+
+      setBottomOffset(baseOffset + cookieBannerHeight + extraCookieOffset + scrollOffset);
     };
 
     calculateOffset();
     const interval = setInterval(calculateOffset, 500);
+    window.addEventListener("scroll", calculateOffset);
 
     return () => {
       clearInterval(interval);
+      window.removeEventListener("scroll", calculateOffset);
     };
   }, []);
 
