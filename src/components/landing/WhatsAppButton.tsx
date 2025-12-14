@@ -12,7 +12,7 @@ const WhatsAppButton = () => {
       const cookieConsent = localStorage.getItem("cookieConsent");
       const baseOffset = 24;
       const cookieBannerHeight = !cookieConsent ? 80 : 0;
-      const extraOffset = !cookieConsent ? 16 : 0; // deixa um pouco acima do banner
+      const extraOffset = !cookieConsent ? 32 : 0; // deixa bem acima do banner de cookies
 
       setBottomOffset(baseOffset + cookieBannerHeight + extraOffset);
     };
