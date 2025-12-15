@@ -42,9 +42,9 @@ const features = [
   },
   {
     icon: Bell,
-    title: "Notificações",
-    description: "Alertas automáticos por email e WhatsApp para clientes e equipe sobre atualizações.",
-    color: "bg-destructive/10 text-destructive"
+    title: "WhatsApp Integrado",
+    description: "Notificações automáticas via WhatsApp: envio de fotos, documentos, status da OS e atualizações em tempo real para seus clientes.",
+    color: "bg-[#25D366]/15 text-[#25D366]"
   },
   {
     icon: BarChart3,
