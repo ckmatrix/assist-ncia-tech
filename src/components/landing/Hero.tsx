@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, CheckCircle, Camera, Video, Shield, Wallet } from "lucide-react";
+import { ArrowRight, Play, CheckCircle, Camera, Video, Shield, Wallet, MessageCircle, FileText, Bell } from "lucide-react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import painelFinanceiro from "@/assets/screenshots/painel-financeiro.png";
 
@@ -85,6 +85,33 @@ const Hero = () => {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Shield className="w-4 h-4 text-primary" />
                   <span>Informações detalhadas</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Seção WhatsApp Integrado */}
+            <div className="bg-gradient-to-r from-[#25D366]/10 to-transparent rounded-2xl p-5 border-l-4 border-[#25D366]">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-[#25D366]/15 rounded-lg flex items-center justify-center">
+                  <MessageCircle className="w-5 h-5 text-[#25D366]" />
+                </div>
+                <h3 className="font-semibold text-foreground">WhatsApp Integrado — notificações automáticas</h3>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4 pl-12">
+                Seu cliente recebe atualizações em tempo real direto no WhatsApp.
+              </p>
+              <div className="flex flex-wrap gap-3 pl-12">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Bell className="w-4 h-4 text-[#25D366]" />
+                  <span>Status da OS</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Camera className="w-4 h-4 text-[#25D366]" />
+                  <span>Fotos</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <FileText className="w-4 h-4 text-[#25D366]" />
+                  <span>Documentos</span>
                 </div>
               </div>
             </div>
