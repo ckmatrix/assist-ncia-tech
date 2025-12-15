@@ -29,9 +29,6 @@ const Integrations = () => {
             
             <div className="flex flex-wrap justify-center gap-3 mt-6">
               <span className="bg-background/50 border border-border px-4 py-2 rounded-full text-sm text-muted-foreground">
-                WhatsApp Business
-              </span>
-              <span className="bg-background/50 border border-border px-4 py-2 rounded-full text-sm text-muted-foreground">
                 NFe/NFSe
               </span>
               <span className="bg-background/50 border border-border px-4 py-2 rounded-full text-sm text-muted-foreground">
@@ -39,6 +36,9 @@ const Integrations = () => {
               </span>
               <span className="bg-background/50 border border-border px-4 py-2 rounded-full text-sm text-muted-foreground">
                 PagSeguro
+              </span>
+              <span className="bg-background/50 border border-border px-4 py-2 rounded-full text-sm text-muted-foreground">
+                PIX Automático
               </span>
             </div>
           </div>
