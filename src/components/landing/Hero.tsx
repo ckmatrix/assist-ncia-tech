@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, CheckCircle, Camera, Video, Shield, Wallet, MessageCircle, FileText, Bell } from "lucide-react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import painelFinanceiro from "@/assets/screenshots/painel-financeiro.png";
+import conectarWhatsapp from "@/assets/screenshots/conectar-whatsapp.png";
 
 const heroData = [
   { 
@@ -14,6 +15,11 @@ const heroData = [
     src: painelFinanceiro, 
     alt: "Painel Financeiro - Assistência Tech",
     badge: { icon: "wallet", title: "A Receber", subtitle: "R$ 1.000,00" }
+  },
+  { 
+    src: conectarWhatsapp, 
+    alt: "Integração WhatsApp - Assistência Tech",
+    badge: { icon: "whatsapp", title: "WhatsApp Integrado", subtitle: "Notificações Automáticas" }
   },
 ];
 
@@ -159,10 +165,16 @@ const Hero = () => {
             <div className="absolute -bottom-4 -right-4 bg-card rounded-xl shadow-lg border border-border p-4 animate-float">
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  heroData[currentImageIndex].badge.icon === "check" ? "bg-success/20" : "bg-primary/20"
+                  heroData[currentImageIndex].badge.icon === "check" 
+                    ? "bg-success/20" 
+                    : heroData[currentImageIndex].badge.icon === "whatsapp"
+                    ? "bg-[#25D366]/20"
+                    : "bg-primary/20"
                 }`}>
                   {heroData[currentImageIndex].badge.icon === "check" ? (
                     <CheckCircle className="w-5 h-5 text-success" />
+                  ) : heroData[currentImageIndex].badge.icon === "whatsapp" ? (
+                    <MessageCircle className="w-5 h-5 text-[#25D366]" />
                   ) : (
                     <Wallet className="w-5 h-5 text-primary" />
                   )}
@@ -170,7 +182,11 @@ const Hero = () => {
                 <div>
                   <p className="text-sm font-medium">{heroData[currentImageIndex].badge.title}</p>
                   <p className={`text-xs font-semibold ${
-                    heroData[currentImageIndex].badge.icon === "check" ? "text-muted-foreground" : "text-primary"
+                    heroData[currentImageIndex].badge.icon === "check" 
+                      ? "text-muted-foreground" 
+                      : heroData[currentImageIndex].badge.icon === "whatsapp"
+                      ? "text-[#25D366]"
+                      : "text-primary"
                   }`}>
                     {heroData[currentImageIndex].badge.subtitle}
                   </p>
