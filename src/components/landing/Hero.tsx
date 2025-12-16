@@ -147,7 +147,7 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="relative animate-fade-up lg:scale-125 lg:translate-x-8 lg:mt-24 self-start" style={{ animationDelay: "0.2s" }}>
+          <div className="relative animate-fade-up lg:scale-125 lg:translate-x-8 lg:mt-32 self-start" style={{ animationDelay: "0.2s" }}>
             <div className="absolute -inset-6 bg-gradient-hero rounded-3xl opacity-25 blur-3xl"></div>
             <div className="relative bg-card rounded-2xl shadow-2xl border border-border overflow-hidden">
               {heroData.map((item, index) => (
