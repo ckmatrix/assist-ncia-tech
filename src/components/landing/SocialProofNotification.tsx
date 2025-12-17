@@ -111,7 +111,7 @@ const SocialProofNotification = () => {
 
   return (
     <div className="fixed bottom-24 left-4 z-50 animate-fade-up">
-      <div className="bg-card border border-border rounded-xl shadow-xl p-4 max-w-xs relative">
+      <div className="bg-card border border-border rounded-xl shadow-xl p-4 min-w-[280px] max-w-sm relative">
         <button 
           onClick={() => setIsVisible(false)}
           className="absolute top-2 right-2 text-muted-foreground hover:text-foreground transition-colors"
