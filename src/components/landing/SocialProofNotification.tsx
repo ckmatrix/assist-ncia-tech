@@ -2,34 +2,20 @@ import { useEffect, useState, useRef } from "react";
 import { CheckCircle, X } from "lucide-react";
 
 const names = [
-  "João Silva",
-  "Maria Santos", 
-  "Pedro Oliveira",
-  "Ana Costa",
-  "Lucas Souza",
-  "Juliana Lima",
-  "Carlos Ferreira",
-  "Fernanda Alves",
-  "Rafael Mendes",
-  "Camila Rocha",
-  "Bruno Martins",
-  "Patrícia Gomes",
-  "Thiago Ribeiro",
-  "Larissa Barbosa",
-  "Gustavo Pereira"
+  "João Silva", "Maria Santos", "Pedro Oliveira", "Ana Costa", "Lucas Souza",
+  "Juliana Lima", "Carlos Ferreira", "Fernanda Alves", "Rafael Mendes", "Camila Rocha",
+  "Bruno Martins", "Patrícia Gomes", "Thiago Ribeiro", "Larissa Barbosa", "Gustavo Pereira",
+  "Marcos Andrade", "Beatriz Nascimento", "Diego Moreira", "Aline Cardoso", "Felipe Ramos",
+  "Vanessa Teixeira", "Roberto Cunha", "Tatiane Freitas", "André Monteiro", "Carla Vieira",
+  "Leonardo Campos", "Priscila Borges", "Fábio Araújo", "Renata Pinto", "Eduardo Lopes",
+  "Daniela Correia", "Rodrigo Nunes", "Amanda Duarte", "Matheus Fonseca", "Jéssica Carvalho"
 ];
 
 const cities = [
-  "São Paulo, SP",
-  "Rio de Janeiro, RJ",
-  "Belo Horizonte, MG",
-  "Curitiba, PR",
-  "Porto Alegre, RS",
-  "Salvador, BA",
-  "Brasília, DF",
-  "Fortaleza, CE",
-  "Recife, PE",
-  "Campinas, SP"
+  "São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", "Curitiba, PR",
+  "Porto Alegre, RS", "Salvador, BA", "Brasília, DF", "Fortaleza, CE",
+  "Recife, PE", "Campinas, SP", "Goiânia, GO", "Manaus, AM", "Florianópolis, SC",
+  "Vitória, ES", "Natal, RN", "João Pessoa, PB", "Belém, PA", "Londrina, PR"
 ];
 
 // Peso menor para Enterprise (menos frequente)
@@ -102,34 +88,34 @@ const SocialProofNotification = () => {
 
   return (
     <div className="fixed bottom-24 left-4 z-50 animate-fade-up">
-      <div className="bg-card border border-border rounded-xl shadow-xl p-4 w-80 relative">
+      <div className="bg-card border border-border rounded-lg shadow-lg p-3 w-64 relative">
         <button 
           onClick={() => setIsVisible(false)}
-          className="absolute top-2 right-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="absolute top-1.5 right-1.5 text-muted-foreground hover:text-foreground transition-colors"
         >
-          <X className="w-4 h-4" />
+          <X className="w-3.5 h-3.5" />
         </button>
         
-        <div className="flex items-center gap-3 pr-4">
-          <div className="w-12 h-12 bg-success/20 rounded-full flex items-center justify-center flex-shrink-0">
-            <CheckCircle className="w-6 h-6 text-success" />
+        <div className="flex items-center gap-2 pr-4">
+          <div className="w-8 h-8 bg-success/20 rounded-full flex items-center justify-center flex-shrink-0">
+            <CheckCircle className="w-4 h-4 text-success" />
           </div>
           
           <div className="flex-1">
-            <p className="text-sm font-bold text-foreground">
+            <p className="text-xs font-semibold text-foreground">
               {notification.name}
             </p>
-            <p className="text-sm text-muted-foreground mt-0.5">
+            <p className="text-xs text-muted-foreground">
               {notification.city}
             </p>
           </div>
         </div>
         
-        <div className="mt-3 pt-3 border-t border-border/50">
-          <p className="text-sm text-primary font-semibold">
+        <div className="mt-2 pt-2 border-t border-border/50">
+          <p className="text-xs text-primary font-medium">
             ✅ Assinou o plano {notification.plan}
           </p>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-[10px] text-muted-foreground mt-0.5">
             há {notification.minutes} minuto{notification.minutes > 1 ? 's' : ''} atrás
           </p>
         </div>
