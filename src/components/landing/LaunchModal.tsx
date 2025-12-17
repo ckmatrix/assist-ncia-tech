@@ -25,10 +25,12 @@ const WHATSAPP_NUMBER = "5511996053510";
 const WHATSAPP_MESSAGE = encodeURIComponent("Olá! Gostaria de saber mais sobre o lançamento do Assistência Tech!");
 
 const features = [
-  { icon: ClipboardList, label: "Gestão de Ordens de Serviço" },
-  { icon: Smartphone, label: "Painel online para clientes" },
-  { icon: Bell, label: "Notificações via WhatsApp" },
-  { icon: BarChart3, label: "Relatórios financeiros" },
+  { icon: ClipboardList, label: "Gestão completa de Ordens de Serviço" },
+  { icon: Smartphone, label: "Painel online para clientes acompanharem OS" },
+  { icon: Bell, label: "Notificações automáticas via WhatsApp" },
+  { icon: BarChart3, label: "Relatórios e painel financeiro" },
+  { icon: Users, label: "Cadastro de clientes integrado" },
+  { icon: Package, label: "Controle de estoque" },
 ];
 
 const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
