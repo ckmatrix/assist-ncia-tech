@@ -40,43 +40,49 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <div className="w-8 h-8 bg-gradient-hero rounded-lg flex items-center justify-center">
-              <Rocket className="w-4 h-4 text-primary-foreground" />
+          <DialogTitle className="flex items-center gap-3 text-2xl">
+            <div className="w-12 h-12 bg-gradient-hero rounded-xl flex items-center justify-center">
+              <Rocket className="w-6 h-6 text-primary-foreground" />
             </div>
             Lançamento em Breve!
           </DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-4 py-2">
-          <p className="text-sm text-muted-foreground">
+        <div className="space-y-6 py-4">
+          <p className="text-muted-foreground">
             O <span className="font-semibold text-foreground">Assistência Tech</span> está chegando! 
-            Sistema completo para gestão de assistências técnicas.
+            Um sistema completo para gestão de assistências técnicas com foco em profissionalismo e 
+            transparência para seus clientes.
           </p>
 
-          <div className="grid grid-cols-2 gap-2">
-            {features.map((feature, index) => (
-              <div 
-                key={index}
-                className="flex items-center gap-2 p-2 rounded-lg bg-primary/10 border border-primary/20"
-              >
-                <feature.icon className="w-4 h-4 text-primary flex-shrink-0" />
-                <span className="text-xs font-medium text-foreground">{feature.label}</span>
-              </div>
-            ))}
+          <div className="space-y-3">
+            <h4 className="font-semibold text-foreground">Funcionalidades principais:</h4>
+            <div className="space-y-3">
+              {features.map((feature, index) => (
+                <div 
+                  key={index}
+                  className="flex items-center gap-3"
+                >
+                  <feature.icon className="w-5 h-5 text-primary flex-shrink-0" />
+                  <span className="text-foreground">{feature.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
-            <p className="text-xs text-foreground">
-              <span className="font-bold text-primary">🎉 Condições especiais!</span> Entre em contato para garantir sua vaga.
+          <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
+            <p className="text-sm text-foreground">
+              <span className="font-bold text-primary">🎉 Condições especiais de lançamento!</span>
+              <br />
+              Entre em contato para garantir sua vaga e aproveitar benefícios exclusivos para os primeiros clientes.
             </p>
           </div>
 
           <Button 
             variant="hero" 
-            className="w-full gap-2 h-9 text-sm"
+            className="w-full gap-2"
             onClick={handleWhatsApp}
           >
             <MessageSquare className="w-4 h-4" />
