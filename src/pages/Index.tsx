@@ -10,6 +10,7 @@ import Footer from "@/components/landing/Footer";
 import CookieConsent from "@/components/landing/CookieConsent";
 import WhatsAppButton from "@/components/landing/WhatsAppButton";
 import AnnouncementBanner from "@/components/landing/AnnouncementBanner";
+import SocialProofNotification from "@/components/landing/SocialProofNotification";
 
 const Index = () => {
   return (
@@ -28,6 +29,7 @@ const Index = () => {
       <Footer />
       <CookieConsent />
       <WhatsAppButton />
+      <SocialProofNotification />
     </div>
   );
 };
