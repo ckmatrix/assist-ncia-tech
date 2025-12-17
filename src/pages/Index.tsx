@@ -9,12 +9,14 @@ import CTA from "@/components/landing/CTA";
 import Footer from "@/components/landing/Footer";
 import CookieConsent from "@/components/landing/CookieConsent";
 import WhatsAppButton from "@/components/landing/WhatsAppButton";
+import AnnouncementBanner from "@/components/landing/AnnouncementBanner";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main>
+      <AnnouncementBanner />
+      <main className="pt-10">
         <Hero />
         <Features />
         <Screenshots />

@@ -4,7 +4,7 @@ import { Check, Sparkles } from "lucide-react";
 const plans = [
   {
     name: "Básico",
-    price: "29,90",
+    price: "Em breve",
     description: "Ideal para assistências pequenas",
     features: [
       "Até 100 OS por mês",
@@ -14,11 +14,11 @@ const plans = [
       "Suporte por email"
     ],
     popular: false,
-    isCustom: false
+    isCustom: true
   },
   {
     name: "Profissional",
-    price: "49,90",
+    price: "Em breve",
     description: "Para assistências em crescimento",
     features: [
       "OS ilimitadas",
@@ -31,7 +31,7 @@ const plans = [
       "Suporte prioritário"
     ],
     popular: true,
-    isCustom: false
+    isCustom: true
   },
   {
     name: "Enterprise",
