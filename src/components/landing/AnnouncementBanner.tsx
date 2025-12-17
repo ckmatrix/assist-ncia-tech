@@ -22,13 +22,13 @@ const AnnouncementBanner = () => {
             </span>
             <span className="text-white/60 font-extrabold text-sm md:text-base">—</span>
             <span className="text-sm md:text-base font-medium text-white/90">
-              Sistema para Assistência Técnica com <span className="font-bold text-white">OS online</span> e <span className="font-bold text-white">notificações no WhatsApp</span>
+              Sistema para Assistência Técnica com <span className="font-bold text-yellow-300">OS online</span> e <span className="font-bold text-yellow-300">notificações no WhatsApp</span>
             </span>
             <span className="text-white/60 font-extrabold text-sm md:text-base">•</span>
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-white" />
               <span className="text-sm md:text-base text-white/90">
-                Mais <span className="font-bold text-white">controle</span>, mais <span className="font-bold text-white">profissionalismo</span> e mais <span className="font-bold text-white">tranquilidade</span>
+                Mais <span className="font-bold text-yellow-300">controle</span>, mais <span className="font-bold text-yellow-300">profissionalismo</span> e mais <span className="font-bold text-yellow-300">tranquilidade</span>
               </span>
             </div>
             <span className="text-white/60 font-extrabold text-sm md:text-base">•</span>
