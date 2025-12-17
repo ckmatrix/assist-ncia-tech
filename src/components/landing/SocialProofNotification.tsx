@@ -46,38 +46,29 @@ const SocialProofNotification = () => {
     minutes: 0
   });
   
-  // Track used combinations to avoid repetition
-  const usedCombinations = useRef<Set<string>>(new Set());
-  const availableNames = useRef<string[]>([...names]);
-  const availableCities = useRef<string[]>([...cities]);
-
-  const getUniqueItem = <T,>(arr: T[], available: React.MutableRefObject<T[]>, original: T[]): T => {
-    if (available.current.length === 0) {
-      available.current = [...original];
-    }
-    const index = Math.floor(Math.random() * available.current.length);
-    const item = available.current[index];
-    available.current.splice(index, 1);
-    return item;
-  };
+  // Track used indices to ensure no repetition until all shown
+  const usedIndices = useRef<Set<number>>(new Set());
+  const notificationCount = useRef(0);
+  const maxNotifications = names.length; // Show each name only once
 
   const generateNotification = () => {
-    const name = getUniqueItem(names, availableNames, names);
-    const city = getUniqueItem(cities, availableCities, cities);
-    const plan = plans[Math.floor(Math.random() * plans.length)];
-    
-    const combinationKey = `${name}-${city}`;
-    
-    // Ensure unique combination
-    if (usedCombinations.current.has(combinationKey)) {
-      // If we've used all combinations, reset
-      if (usedCombinations.current.size >= names.length * cities.length * 0.5) {
-        usedCombinations.current.clear();
-      }
-      return; // Skip this notification
+    // Stop after showing all unique notifications
+    if (notificationCount.current >= maxNotifications) {
+      return;
     }
+
+    // Find unused index
+    let index: number;
+    do {
+      index = Math.floor(Math.random() * names.length);
+    } while (usedIndices.current.has(index));
     
-    usedCombinations.current.add(combinationKey);
+    usedIndices.current.add(index);
+    notificationCount.current++;
+
+    const name = names[index];
+    const city = cities[index % cities.length];
+    const plan = plans[Math.floor(Math.random() * plans.length)];
     
     setNotification({
       name,
@@ -111,7 +102,7 @@ const SocialProofNotification = () => {
 
   return (
     <div className="fixed bottom-24 left-4 z-50 animate-fade-up">
-      <div className="bg-card border border-border rounded-xl shadow-xl p-4 w-72 relative">
+      <div className="bg-card border border-border rounded-xl shadow-xl p-4 w-80 relative">
         <button 
           onClick={() => setIsVisible(false)}
           className="absolute top-2 right-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -119,25 +110,28 @@ const SocialProofNotification = () => {
           <X className="w-4 h-4" />
         </button>
         
-        <div className="flex items-start gap-3 pr-4">
-          <div className="w-10 h-10 bg-success/20 rounded-full flex items-center justify-center flex-shrink-0">
-            <CheckCircle className="w-5 h-5 text-success" />
+        <div className="flex items-center gap-3 pr-4">
+          <div className="w-12 h-12 bg-success/20 rounded-full flex items-center justify-center flex-shrink-0">
+            <CheckCircle className="w-6 h-6 text-success" />
           </div>
           
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-foreground truncate">
+          <div className="flex-1">
+            <p className="text-sm font-bold text-foreground">
               {notification.name}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground mt-0.5">
               {notification.city}
             </p>
-            <p className="text-xs text-primary font-medium mt-1">
-              Assinou o plano {notification.plan}
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              há {notification.minutes} minuto{notification.minutes > 1 ? 's' : ''}
-            </p>
           </div>
+        </div>
+        
+        <div className="mt-3 pt-3 border-t border-border/50">
+          <p className="text-sm text-primary font-semibold">
+            ✅ Assinou o plano {notification.plan}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            há {notification.minutes} minuto{notification.minutes > 1 ? 's' : ''} atrás
+          </p>
         </div>
       </div>
     </div>
