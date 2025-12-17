@@ -20,7 +20,7 @@ const AnnouncementBanner = () => {
         Mais <span className="font-bold text-yellow-300">✅ controle</span>, mais <span className="font-bold text-yellow-300">⭐ profissionalismo</span> e mais <span className="font-bold text-yellow-300">💚 tranquilidade</span>
       </span>
       <span className="text-white/60 font-extrabold text-sm md:text-base">•</span>
-      <span className="text-sm md:text-base font-bold text-yellow-300 bg-white/25 px-4 py-1.5 rounded-full shadow-lg border border-white/30 hover:bg-white/30 transition-all flex items-center gap-2 animate-pulse">
+      <span className="text-sm md:text-base font-bold text-gray-900 bg-yellow-300 px-4 py-1.5 rounded-full shadow-lg border-2 border-yellow-200 hover:bg-yellow-200 transition-all flex items-center gap-2">
         👉 Quero garantir minha vaga no lançamento ✨
       </span>
     </div>
