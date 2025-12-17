@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react";
+import { Rocket, MessageSquare, Shield } from "lucide-react";
 
 const WHATSAPP_NUMBER = "5511996053510";
 const WHATSAPP_MESSAGE = encodeURIComponent("Olá! Gostaria de aproveitar a condição especial de lançamento do Assistência Tech!");
@@ -15,24 +15,27 @@ const AnnouncementBanner = () => {
     >
       <div className="py-3 flex items-center justify-center animate-marquee whitespace-nowrap group-hover:[animation-play-state:paused]">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="inline-flex items-center gap-3 mx-12">
-            <Sparkles className="w-5 h-5 text-accent animate-pulse" />
+          <div key={i} className="inline-flex items-center gap-4 mx-16">
+            <Rocket className="w-5 h-5 text-accent" />
             <span className="text-sm md:text-base font-bold text-primary-foreground tracking-wide">
-              🚀 LANÇAMENTO EM BREVE
+              Assistência Tech
             </span>
-            <span className="text-accent font-extrabold text-sm md:text-base">
-              •
+            <span className="text-accent font-extrabold text-sm md:text-base">—</span>
+            <span className="text-sm md:text-base font-medium text-primary-foreground/90">
+              Sistema para Assistência Técnica com OS online e notificações no WhatsApp
             </span>
-            <span className="text-sm md:text-base font-semibold text-primary-foreground/90">
-              Temos <span className="text-accent font-bold">10 vagas</span> para novos clientes
+            <span className="text-accent font-extrabold text-sm md:text-base">•</span>
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-accent" />
+              <span className="text-sm md:text-base text-primary-foreground/90">
+                Mais controle, mais profissionalismo e mais tranquilidade para seus clientes
+              </span>
+            </div>
+            <span className="text-accent font-extrabold text-sm md:text-base">•</span>
+            <span className="text-sm md:text-base font-bold text-accent underline underline-offset-2 group-hover:text-primary-foreground transition-colors flex items-center gap-2">
+              <MessageSquare className="w-4 h-4" />
+              Fale conosco →
             </span>
-            <span className="text-accent font-extrabold text-sm md:text-base">
-              •
-            </span>
-            <span className="text-sm md:text-base font-bold text-accent underline underline-offset-2 group-hover:text-primary-foreground transition-colors">
-              Garanta condições especiais →
-            </span>
-            <Sparkles className="w-5 h-5 text-accent animate-pulse" />
           </div>
         ))}
       </div>

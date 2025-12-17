@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CheckCircle, X } from "lucide-react";
 
 const names = [
@@ -32,9 +32,9 @@ const cities = [
   "Campinas, SP"
 ];
 
-const plans = ["Básico", "Profissional", "Enterprise"];
+// Peso menor para Enterprise (menos frequente)
+const plans = ["Básico", "Básico", "Básico", "Profissional", "Profissional", "Profissional", "Profissional", "Enterprise"];
 
-const getRandomItem = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 const getRandomMinutes = (): number => Math.floor(Math.random() * 15) + 1;
 
 const SocialProofNotification = () => {
@@ -45,12 +45,44 @@ const SocialProofNotification = () => {
     plan: "",
     minutes: 0
   });
+  
+  // Track used combinations to avoid repetition
+  const usedCombinations = useRef<Set<string>>(new Set());
+  const availableNames = useRef<string[]>([...names]);
+  const availableCities = useRef<string[]>([...cities]);
+
+  const getUniqueItem = <T,>(arr: T[], available: React.MutableRefObject<T[]>, original: T[]): T => {
+    if (available.current.length === 0) {
+      available.current = [...original];
+    }
+    const index = Math.floor(Math.random() * available.current.length);
+    const item = available.current[index];
+    available.current.splice(index, 1);
+    return item;
+  };
 
   const generateNotification = () => {
+    const name = getUniqueItem(names, availableNames, names);
+    const city = getUniqueItem(cities, availableCities, cities);
+    const plan = plans[Math.floor(Math.random() * plans.length)];
+    
+    const combinationKey = `${name}-${city}`;
+    
+    // Ensure unique combination
+    if (usedCombinations.current.has(combinationKey)) {
+      // If we've used all combinations, reset
+      if (usedCombinations.current.size >= names.length * cities.length * 0.5) {
+        usedCombinations.current.clear();
+      }
+      return; // Skip this notification
+    }
+    
+    usedCombinations.current.add(combinationKey);
+    
     setNotification({
-      name: getRandomItem(names),
-      city: getRandomItem(cities),
-      plan: getRandomItem(plans),
+      name,
+      city,
+      plan,
       minutes: getRandomMinutes()
     });
     setIsVisible(true);
@@ -61,15 +93,13 @@ const SocialProofNotification = () => {
   };
 
   useEffect(() => {
-    // Initial delay before first notification
     const initialDelay = setTimeout(() => {
       generateNotification();
     }, 8000);
 
-    // Set up recurring notifications
     const interval = setInterval(() => {
       generateNotification();
-    }, 15000 + Math.random() * 10000); // Random interval between 15-25 seconds
+    }, 15000 + Math.random() * 10000);
 
     return () => {
       clearTimeout(initialDelay);
