@@ -8,7 +8,36 @@ const names = [
   "Marcos Andrade", "Beatriz Nascimento", "Diego Moreira", "Aline Cardoso", "Felipe Ramos",
   "Vanessa Teixeira", "Roberto Cunha", "Tatiane Freitas", "André Monteiro", "Carla Vieira",
   "Leonardo Campos", "Priscila Borges", "Fábio Araújo", "Renata Pinto", "Eduardo Lopes",
-  "Daniela Correia", "Rodrigo Nunes", "Amanda Duarte", "Matheus Fonseca", "Jéssica Carvalho"
+  "Daniela Correia", "Rodrigo Nunes", "Amanda Duarte", "Matheus Fonseca", "Jéssica Carvalho",
+  "Ricardo Azevedo", "Luciana Machado", "Henrique Dias", "Cristiane Moura", "Vitor Hugo",
+  "Simone Medeiros", "Gabriel Santos", "Mariana Almeida", "Alexandre Pires", "Cláudia Reis",
+  "Leandro Costa", "Paula Fernandes", "Marcelo Barros", "Adriana Sousa", "Fernando Nogueira",
+  "Sandra Oliveira", "Rogério Lima", "Natália Gonçalves", "Vinícius Amaral", "Eliana Castro",
+  "Renato Teixeira", "Mônica Freire", "Sérgio Melo", "Letícia Brandão", "Wagner Rocha",
+  "Carolina Neves", "Otávio Guimarães", "Débora Sampaio", "Jorge Figueiredo", "Raquel Prado",
+  "Antônio Carvalho", "Eliane Batista", "Paulo Henrique", "Fabiana Leal", "Márcio Xavier",
+  "Kátia Andrade", "Roberto Vieira", "Viviane Mendes", "Edson Tavares", "Rosana Brito",
+  "Flávio Ribeiro", "Denise Macedo", "Cícero Moreira", "Valéria Cruz", "Maurício Sá",
+  "Solange Duarte", "Nilton Bastos", "Regina Fontes", "Oswaldo Gomes", "Célia Ramos",
+  "Milton Coelho", "Marlene Pinto", "Geraldo Lopes", "Sueli Franco", "Aloísio Cunha",
+  "Marta Pereira", "Joaquim Araújo", "Terezinha Lima", "Valdir Costa", "Neusa Ferreira",
+  "Ademir Santos", "Inês Correia", "Sebastião Nunes", "Aparecida Borges", "Adilson Campos",
+  "Joana Monteiro", "Wilson Alves", "Tereza Souza", "Arnaldo Silva", "Irene Barbosa",
+  "Nelson Rodrigues", "Conceição Martins", "Cláudio Fonseca", "Lúcia Nascimento", "Reginaldo Pires",
+  "Helena Reis", "Benedito Teixeira", "Rosa Maria", "Domingos Freitas", "Francisca Lopes",
+  "Lúcio Medeiros", "Antônia Dias", "Everaldo Melo", "Margarida Moura", "Lindomar Guimarães",
+  "Josefa Costa", "Edinaldo Oliveira", "Socorro Lima", "Valdeci Souza", "Iracema Carvalho",
+  "Erivaldo Santos", "Dalva Pereira", "Rivaldo Ferreira", "Zuleide Gomes", "Ednaldo Ramos",
+  "Severina Cruz", "Claudemir Brito", "Luciene Tavares", "Genival Macedo", "Ivonete Sampaio",
+  "Damião Vieira", "Quitéria Prado", "Eronildo Mendes", "Ivanilda Batista", "Cicinho Xavier",
+  "Geralda Leal", "Toninho Bastos", "Ivone Fontes", "Arlindo Coelho", "Marilene Franco",
+  "Zezinho Cunha", "Teresinha Araújo", "Manoel Santos", "Djanira Correia", "Adão Monteiro",
+  "Creuza Alves", "Josias Lima", "Lindalva Barbosa", "Elias Rodrigues", "Raimunda Martins",
+  "Isaías Costa", "Aldenora Fonseca", "Natalino Reis", "Zenilda Pires", "Silvestre Freitas",
+  "Maura Medeiros", "Justino Dias", "Osmarina Melo", "Valdomiro Guimarães", "Idalina Moura",
+  "Esmeraldo Teixeira", "Valdira Nascimento", "Clementino Tavares", "Rosaura Macedo", "Ubiratan Sampaio",
+  "Zelinda Vieira", "Josenildo Prado", "Nalva Mendes", "Claudionor Batista", "Gildete Xavier",
+  "Edvaldo Leal", "Zilma Bastos", "Januário Fontes", "Odaléia Coelho", "Valdemar Franco"
 ];
 
 const cities = [
@@ -113,7 +142,7 @@ const SocialProofNotification = () => {
         
         <div className="mt-2 pt-2 border-t border-border/50">
           <p className="text-xs text-primary font-medium">
-            ✅ Assinou o plano {notification.plan}
+            ✅ Garantiu condição de lançamento
           </p>
           <p className="text-[10px] text-muted-foreground mt-0.5">
             há {notification.minutes} minuto{notification.minutes > 1 ? 's' : ''} atrás
