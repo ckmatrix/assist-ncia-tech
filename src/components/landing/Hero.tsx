@@ -4,6 +4,8 @@ import { ArrowRight, Play, CheckCircle, Camera, Video, Shield, Wallet, MessageCi
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import painelFinanceiro from "@/assets/screenshots/painel-financeiro.png";
 import conectarWhatsapp from "@/assets/screenshots/conectar-whatsapp.png";
+import whatsappConfig from "@/assets/screenshots/whatsapp-config.png";
+import relatoriosGeral from "@/assets/screenshots/relatorios-geral.png";
 
 const heroData = [
   { 
@@ -20,6 +22,16 @@ const heroData = [
     src: conectarWhatsapp, 
     alt: "Integração WhatsApp - Assistência Tech",
     badge: { icon: "whatsapp", title: "WhatsApp Integrado", subtitle: "Notificações Automáticas" }
+  },
+  { 
+    src: relatoriosGeral, 
+    alt: "Relatórios Gerais - Assistência Tech",
+    badge: { icon: "check", title: "Relatório Gerado", subtitle: "23 clientes cadastrados" }
+  },
+  { 
+    src: whatsappConfig, 
+    alt: "Configuração WhatsApp - Assistência Tech",
+    badge: { icon: "whatsapp", title: "WhatsApp Config", subtitle: "Mensagens Personalizadas" }
   },
 ];
 
