@@ -184,7 +184,7 @@ const Pricing = () => {
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="bg-gradient-hero text-primary-foreground text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-1.5 animate-pulse">
+                    <span className="bg-gradient-hero text-primary-foreground text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-1.5">
                       <Sparkles className="w-3 h-3" />
                       Mais Popular
                     </span>
