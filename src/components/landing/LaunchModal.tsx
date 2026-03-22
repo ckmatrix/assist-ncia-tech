@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LogIn, Loader2, AlertCircle } from "lucide-react";
 import { useState } from "react";
+import ExpiredModal from "./ExpiredModal";
 
 interface LaunchModalProps {
   open: boolean;
@@ -19,6 +20,8 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [expiredOpen, setExpiredOpen] = useState(false);
+  const [expiredCompany, setExpiredCompany] = useState<string | undefined>();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +39,17 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
         setError("Email ou senha incorretos.");
         setLoading(false);
         return;
+      }
+
+      if (res.status === 403) {
+        const data = await res.json();
+        if (data.code === "COMPANY_EXPIRED") {
+          setExpiredCompany(data.companyName);
+          setExpiredOpen(true);
+          onOpenChange(false);
+          setLoading(false);
+          return;
+        }
       }
 
       if (!res.ok) {
