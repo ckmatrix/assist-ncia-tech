@@ -63,7 +63,13 @@ const Pricing = () => {
       })
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setPlans(data);
+          const mapped = data.map((p: any, i: number) => ({
+            ...p,
+            popular: p.name === "GOLD",
+            isCustom: false,
+            description: p.description || "",
+          }));
+          setPlans(mapped);
         }
       })
       .catch(() => {})
