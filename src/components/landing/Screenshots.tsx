@@ -5,13 +5,17 @@ import acompanhamentoOs from "@/assets/screenshots/acompanhamento-os.png";
 import painelCliente from "@/assets/screenshots/painel-cliente.png";
 import relatoriosLoja from "@/assets/screenshots/relatorios-loja.png";
 import cadastroOs from "@/assets/screenshots/cadastro-os.png";
+import whatsappConfig from "@/assets/screenshots/whatsapp-config.png";
+import relatoriosGeral from "@/assets/screenshots/relatorios-geral.png";
 
 const tabs = [
   { id: "dashboard", label: "Dashboard", description: "Visão geral com métricas e relatórios em tempo real", image: painelRelatorios, isVideo: false },
   { id: "os", label: "Ordens de Serviço", description: "Gerencie todas as OS com filtros e status", image: acompanhamentoOs, isVideo: false },
   { id: "cadastro", label: "Cadastro OS", description: "Cadastre novas ordens de serviço rapidamente", image: cadastroOs, isVideo: false },
   { id: "cliente", label: "Painel Cliente", description: "Exemplo do painel web do cliente", video: "/videos/painel-cliente.mov", isVideo: true },
-  { id: "financeiro", label: "Financeiro", description: "Controle de receitas, despesas e fluxo de caixa", image: relatoriosLoja, isVideo: false }
+  { id: "financeiro", label: "Financeiro", description: "Controle de receitas, despesas e fluxo de caixa", image: relatoriosLoja, isVideo: false },
+  { id: "relatorios", label: "Relatórios", description: "Resumo geral do sistema com exportação em PDF e Excel", image: relatoriosGeral, isVideo: false },
+  { id: "whatsapp", label: "WhatsApp", description: "Configure mensagens e integração com WhatsApp", image: whatsappConfig, isVideo: false },
 ];
 
 const Screenshots = () => {
