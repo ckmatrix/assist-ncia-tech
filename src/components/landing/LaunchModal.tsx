@@ -5,90 +5,117 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { 
-  Rocket, 
-  MessageSquare, 
-  ClipboardList, 
-  Smartphone, 
-  BarChart3, 
-  Users, 
-  Package,
-  Bell
-} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { LogIn, Loader2, AlertCircle } from "lucide-react";
+import { useState } from "react";
 
 interface LaunchModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const WHATSAPP_NUMBER = "5511996053510";
-const WHATSAPP_MESSAGE = encodeURIComponent("Olá! Gostaria de saber mais sobre o lançamento do Assistência Tech!");
-
-const features = [
-  { icon: ClipboardList, label: "Gestão completa de Ordens de Serviço" },
-  { icon: Smartphone, label: "Painel online para clientes acompanharem OS" },
-  { icon: Bell, label: "Notificações automáticas via WhatsApp" },
-  { icon: BarChart3, label: "Relatórios e painel financeiro" },
-  { icon: Users, label: "Cadastro de clientes integrado" },
-  { icon: Package, label: "Controle de estoque" },
-];
-
 const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
-  const handleWhatsApp = () => {
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`, "_blank");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("https://api.assistenciatech.com.br/auth/login-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (res.status === 401) {
+        setError("Email ou senha incorretos.");
+        setLoading(false);
+        return;
+      }
+
+      if (!res.ok) {
+        setError("Erro ao fazer login. Tente novamente.");
+        setLoading(false);
+        return;
+      }
+
+      const data = await res.json();
+      window.location.href = `https://app.assistenciatech.com.br/login?code=${data.code}`;
+    } catch {
+      setError("Erro de conexão. Verifique sua internet e tente novamente.");
+      setLoading(false);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 text-2xl">
             <div className="w-12 h-12 bg-gradient-hero rounded-xl flex items-center justify-center">
-              <Rocket className="w-6 h-6 text-primary-foreground" />
+              <LogIn className="w-6 h-6 text-primary-foreground" />
             </div>
-            Lançamento em Breve!
+            Entrar no sistema
           </DialogTitle>
         </DialogHeader>
-        
-        <div className="space-y-6 py-4">
-          <p className="text-muted-foreground">
-            O <span className="font-semibold text-foreground">Assistência Tech</span> está chegando! 
-            Um sistema completo para gestão de assistências técnicas com foco em profissionalismo e 
-            transparência para seus clientes.
-          </p>
 
-          <div className="space-y-3">
-            <h4 className="font-semibold text-foreground">Funcionalidades principais:</h4>
-            <div className="space-y-3">
-              {features.map((feature, index) => (
-                <div 
-                  key={index}
-                  className="flex items-center gap-3"
-                >
-                  <feature.icon className="w-5 h-5 text-primary flex-shrink-0" />
-                  <span className="text-foreground">{feature.label}</span>
-                </div>
-              ))}
+        <form onSubmit={handleLogin} className="space-y-4 py-4">
+          <div className="space-y-2">
+            <label htmlFor="email" className="text-sm font-medium text-foreground">
+              Email
+            </label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="seu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="password" className="text-sm font-medium text-foreground">
+              Senha
+            </label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="Sua senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+
+          {error && (
+            <div className="flex items-center gap-2 text-destructive text-sm bg-destructive/10 border border-destructive/20 rounded-lg p-3">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              {error}
             </div>
-          </div>
+          )}
 
-          <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
-            <p className="text-sm text-foreground">
-              <span className="font-bold text-primary">🎉 Condições especiais de lançamento!</span>
-              <br />
-              Entre em contato para garantir sua vaga e aproveitar benefícios exclusivos para os primeiros clientes.
-            </p>
-          </div>
-
-          <Button 
-            variant="hero" 
+          <Button
+            type="submit"
+            variant="hero"
             className="w-full gap-2"
-            onClick={handleWhatsApp}
+            disabled={loading}
           >
-            <MessageSquare className="w-4 h-4" />
-            Falar com a equipe
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <LogIn className="w-4 h-4" />
+            )}
+            {loading ? "Entrando..." : "Entrar"}
           </Button>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
