@@ -128,13 +128,13 @@ const Pricing = () => {
             <Loader2 className="w-8 h-8 text-primary animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-start">
             {plans.map((plan) => (
               <div
                 key={plan.id || plan.name}
                 className={`relative bg-card rounded-2xl p-8 border transition-all duration-500 group cursor-pointer flex flex-col ${
                   plan.popular
-                    ? "border-primary shadow-xl md:scale-105 hover:shadow-2xl hover:shadow-primary/20"
+                    ? "border-primary shadow-xl hover:shadow-2xl hover:shadow-primary/20 ring-2 ring-primary"
                     : "border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-2"
                 }`}
                 onClick={() => handleWhatsAppClick(plan.name)}
