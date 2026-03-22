@@ -72,14 +72,17 @@ const Pricing = () => {
 
   const getPrice = (plan: Plan) => {
     if (plan.isCustom || plan.price == null) return null;
-    const price = billing === "annual" ? plan.price * 0.75 : plan.price;
+    const basePrice = typeof plan.price === "string" ? parseFloat(plan.price) : plan.price;
+    if (isNaN(basePrice)) return null;
+    const discount = plan.annualDiscountPercent ?? 25;
+    const price = billing === "annual" ? basePrice * (1 - discount / 100) : basePrice;
     return price;
   };
 
   const formatPrice = (plan: Plan) => {
     const price = getPrice(plan);
     if (price == null) return "Em breve";
-    return price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return price.toFixed(2).replace(".", ",");
   };
 
   return (
