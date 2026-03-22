@@ -63,12 +63,45 @@ const Pricing = () => {
       })
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          const mapped = data.map((p: any, i: number) => ({
-            ...p,
-            popular: p.name === "GOLD",
-            isCustom: false,
-            description: p.description || "",
-          }));
+          const placeholders = ["teste", "gold", "silver", "start", "platinum", "tudo"];
+          const mapped = data.map((p: any) => {
+            const cleanFeatures = (p.features || []).filter(
+              (f: string) => !placeholders.includes(f.trim().toLowerCase())
+            );
+
+            const extraFeatures: string[] = [];
+            if (p.maxActiveUsers) extraFeatures.push(`Até ${p.maxActiveUsers} usuário${p.maxActiveUsers > 1 ? "s" : ""}`);
+            if (p.maxMonthlyOrders) extraFeatures.push(`Até ${p.maxMonthlyOrders} OS/mês`);
+            if (!p.maxMonthlyOrders) extraFeatures.push("OS ilimitadas");
+            if (p.maxOsStorageMb) {
+              const gb = p.maxOsStorageMb / 1024;
+              extraFeatures.push(`${gb >= 1 ? `${gb}GB` : `${p.maxOsStorageMb}MB`} de armazenamento`);
+            }
+            if (p.allowWhatsapp) extraFeatures.push("Notificações WhatsApp");
+            if (p.allowUserPermissions) extraFeatures.push("Permissões por usuário");
+            if (p.allowCommission) extraFeatures.push("Controle de comissões");
+
+            const combined = [...extraFeatures, ...cleanFeatures.filter(
+              (f: string) => !extraFeatures.some(ef => ef.toLowerCase().includes(f.toLowerCase()) || f.toLowerCase().includes("ilimitada"))
+            )];
+
+            const uniqueFeatures = [...new Set(combined)];
+
+            const descriptions: Record<string, string> = {
+              START: "Ideal para quem está começando",
+              SILVER: "Para assistências em crescimento",
+              GOLD: "O mais escolhido pelos clientes",
+              PLATINUM: "Máximo desempenho e suporte",
+            };
+
+            return {
+              ...p,
+              features: uniqueFeatures,
+              popular: p.name === "GOLD",
+              isCustom: false,
+              description: p.description || descriptions[p.name] || "",
+            };
+          });
           setPlans(mapped);
         }
       })
