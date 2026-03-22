@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LogIn, Loader2, AlertCircle } from "lucide-react";
 import { useState } from "react";
+import ExpiredModal from "./ExpiredModal";
 
 interface LaunchModalProps {
   open: boolean;
@@ -19,6 +20,8 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [expiredOpen, setExpiredOpen] = useState(false);
+  const [expiredCompany, setExpiredCompany] = useState<string | undefined>();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +41,17 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
         return;
       }
 
+      if (res.status === 403) {
+        const data = await res.json();
+        if (data.code === "COMPANY_EXPIRED") {
+          setExpiredCompany(data.companyName);
+          setExpiredOpen(true);
+          onOpenChange(false);
+          setLoading(false);
+          return;
+        }
+      }
+
       if (!res.ok) {
         setError("Erro ao fazer login. Tente novamente.");
         setLoading(false);
@@ -53,6 +67,7 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
   };
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -115,9 +130,21 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
             )}
             {loading ? "Entrando..." : "Entrar"}
           </Button>
+
+          <a
+            href="https://app.assistenciatech.com.br/forgot-password"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-center text-sm text-primary hover:underline"
+          >
+            Esqueci minha senha
+          </a>
         </form>
       </DialogContent>
     </Dialog>
+
+    <ExpiredModal open={expiredOpen} onOpenChange={setExpiredOpen} companyName={expiredCompany} />
+    </>
   );
 };
 
