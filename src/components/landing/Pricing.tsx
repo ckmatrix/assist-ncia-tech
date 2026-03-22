@@ -78,7 +78,7 @@ const Pricing = () => {
   const formatPrice = (plan: Plan) => {
     const price = getPrice(plan);
     if (price == null) return "Em breve";
-    return price.toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+    return price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   return (
