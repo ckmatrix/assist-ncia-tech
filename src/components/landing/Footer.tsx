@@ -1,5 +1,6 @@
 import { useState } from "react";
 import FooterModals from "./FooterModals";
+import logoAt from "@/assets/logo_at.png";
 
 const Footer = () => {
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -13,10 +14,8 @@ const Footer = () => {
         <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-gradient-hero rounded-xl flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-sm">AT</span>
-                </div>
+              <div className="flex items-center gap-3 mb-4">
+                <img src={logoAt} alt="Assistência Tech" className="w-14 h-14 object-contain" />
                 <span className="text-xl font-bold">Assistência Tech</span>
               </div>
               <p className="text-muted-foreground text-sm">
