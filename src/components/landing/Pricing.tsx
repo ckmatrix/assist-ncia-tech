@@ -3,13 +3,14 @@ import { Check, Sparkles, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Plan {
-  id: string;
+  id: string | number;
   name: string;
-  price: number | null;
-  description: string;
+  price: number | string | null;
+  description?: string;
   features: string[];
   popular?: boolean;
   isCustom?: boolean;
+  annualDiscountPercent?: number;
 }
 
 const WHATSAPP_NUMBER = "5511996053510";
