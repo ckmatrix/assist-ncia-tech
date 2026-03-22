@@ -5,50 +5,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { AlertTriangle, Search, Loader2, ExternalLink, MessageCircle, Unlock } from "lucide-react";
-import { useState } from "react";
+import { AlertTriangle, ExternalLink, MessageCircle, Unlock } from "lucide-react";
 
 interface ExpiredModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   companyName?: string;
+  paymentUrl?: string;
+  trustUnlockAvailable?: boolean;
 }
 
-const ExpiredModal = ({ open, onOpenChange, companyName }: ExpiredModalProps) => {
-  const [document, setDocument] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [invoiceUrl, setInvoiceUrl] = useState<string | null>(null);
-  const [error, setError] = useState("");
-
-  const handleSearchInvoice = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    setInvoiceUrl(null);
-
-    try {
-      const cleanDoc = document.replace(/\D/g, "");
-      const res = await fetch(`https://api.assistenciatech.com.br/public/invoice?document=${cleanDoc}`);
-
-      if (!res.ok) {
-        setError("Nenhuma fatura encontrada para este CPF/CNPJ.");
-        setLoading(false);
-        return;
-      }
-
-      const data = await res.json();
-      setInvoiceUrl(data.url || data.invoiceUrl || null);
-      if (!data.url && !data.invoiceUrl) {
-        setError("Nenhuma fatura pendente encontrada.");
-      }
-    } catch {
-      setError("Erro ao buscar fatura. Tente novamente.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+const ExpiredModal = ({ open, onOpenChange, companyName, paymentUrl, trustUnlockAvailable }: ExpiredModalProps) => {
   const handleContactFinancial = () => {
     window.open(
       "https://wa.me/5511999999999?text=Olá, preciso de ajuda com minha assinatura vencida.",
@@ -76,37 +43,11 @@ const ExpiredModal = ({ open, onOpenChange, companyName }: ExpiredModalProps) =>
             Regularize para continuar acessando o sistema.
           </p>
 
-          {/* Buscar fatura */}
-          <form onSubmit={handleSearchInvoice} className="space-y-3">
-            <label className="text-sm font-medium text-foreground">
-              Buscar fatura por CPF/CNPJ
-            </label>
-            <div className="flex gap-2">
-              <Input
-                placeholder="Digite seu CPF ou CNPJ"
-                value={document}
-                onChange={(e) => setDocument(e.target.value)}
-                required
-                disabled={loading}
-              />
-              <Button type="submit" variant="default" size="default" disabled={loading} className="shrink-0">
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                Buscar
-              </Button>
-            </div>
-          </form>
-
-          {error && (
-            <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-lg p-3">
-              {error}
-            </p>
-          )}
-
-          {invoiceUrl && (
+          {paymentUrl && (
             <Button
               variant="hero"
               className="w-full gap-2"
-              onClick={() => window.open(invoiceUrl, "_blank")}
+              onClick={() => window.open(paymentUrl, "_blank")}
             >
               <ExternalLink className="w-4 h-4" />
               Abrir Fatura Agora
@@ -123,19 +64,21 @@ const ExpiredModal = ({ open, onOpenChange, companyName }: ExpiredModalProps) =>
               Falar com Financeiro
             </Button>
 
-            <Button
-              variant="ghost"
-              className="w-full gap-2 text-muted-foreground"
-              onClick={() => {
-                window.open(
-                  "https://wa.me/5511999999999?text=Olá, gostaria de solicitar o desbloqueio de confiança (2 dias).",
-                  "_blank"
-                );
-              }}
-            >
-              <Unlock className="w-4 h-4" />
-              Desbloqueio de confiança (2 dias)
-            </Button>
+            {trustUnlockAvailable && (
+              <Button
+                variant="ghost"
+                className="w-full gap-2 text-muted-foreground"
+                onClick={() => {
+                  window.open(
+                    "https://wa.me/5511999999999?text=Olá, gostaria de solicitar o desbloqueio de confiança (2 dias).",
+                    "_blank"
+                  );
+                }}
+              >
+                <Unlock className="w-4 h-4" />
+                Desbloqueio de confiança (2 dias)
+              </Button>
+            )}
           </div>
         </div>
       </DialogContent>
