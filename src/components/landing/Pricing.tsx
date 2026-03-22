@@ -3,13 +3,14 @@ import { Check, Sparkles, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Plan {
-  id: string;
+  id: string | number;
   name: string;
-  price: number | null;
-  description: string;
+  price: number | string | null;
+  description?: string;
   features: string[];
   popular?: boolean;
   isCustom?: boolean;
+  annualDiscountPercent?: number;
 }
 
 const WHATSAPP_NUMBER = "5511996053510";
@@ -62,7 +63,13 @@ const Pricing = () => {
       })
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setPlans(data);
+          const mapped = data.map((p: any, i: number) => ({
+            ...p,
+            popular: p.name === "GOLD",
+            isCustom: false,
+            description: p.description || "",
+          }));
+          setPlans(mapped);
         }
       })
       .catch(() => {})
@@ -71,14 +78,17 @@ const Pricing = () => {
 
   const getPrice = (plan: Plan) => {
     if (plan.isCustom || plan.price == null) return null;
-    const price = billing === "annual" ? plan.price * 0.75 : plan.price;
+    const basePrice = typeof plan.price === "string" ? parseFloat(plan.price) : plan.price;
+    if (isNaN(basePrice)) return null;
+    const discount = plan.annualDiscountPercent ?? 25;
+    const price = billing === "annual" ? basePrice * (1 - discount / 100) : basePrice;
     return price;
   };
 
   const formatPrice = (plan: Plan) => {
     const price = getPrice(plan);
     if (price == null) return "Em breve";
-    return price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return price.toFixed(2).replace(".", ",");
   };
 
   return (
@@ -128,7 +138,7 @@ const Pricing = () => {
             <Loader2 className="w-8 h-8 text-primary animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto items-start">
             {plans.map((plan) => (
               <div
                 key={plan.id || plan.name}
