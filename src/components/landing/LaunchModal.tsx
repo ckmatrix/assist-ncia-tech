@@ -129,9 +129,21 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
             )}
             {loading ? "Entrando..." : "Entrar"}
           </Button>
+
+          <a
+            href="https://app.assistenciatech.com.br/forgot-password"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-center text-sm text-primary hover:underline"
+          >
+            Esqueci minha senha
+          </a>
         </form>
       </DialogContent>
     </Dialog>
+
+    <ExpiredModal open={expiredOpen} onOpenChange={setExpiredOpen} companyName={expiredCompany} />
+    </>
   );
 };
 
