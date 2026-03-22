@@ -97,7 +97,7 @@ const Pricing = () => {
             return {
               ...p,
               features: uniqueFeatures,
-              popular: p.name === "GOLD",
+              popular: p.name === "SILVER",
               isCustom: false,
               description: p.description || descriptions[p.name] || "",
             };
