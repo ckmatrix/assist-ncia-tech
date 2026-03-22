@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import logoAt from "@/assets/logo_at.png";
 import { useState } from "react";
 import LaunchModal from "./LaunchModal";
 
@@ -35,9 +36,7 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-hero rounded-xl flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">AT</span>
-            </div>
+            <img src={logoAt} alt="Assistência Tech" className="w-10 h-10 object-contain" />
             <span className="text-xl font-bold text-foreground">Assistência Tech</span>
           </div>
 
