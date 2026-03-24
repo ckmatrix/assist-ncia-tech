@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import acompanhamentoOs from "@/assets/screenshots/acompanhamento-os.png";
-import painelCliente from "@/assets/screenshots/painel-cliente.png";
+
 import relatoriosLoja from "@/assets/screenshots/relatorios-loja.png";
 import cadastroOs from "@/assets/screenshots/cadastro-os.png";
 import whatsappConfig from "@/assets/screenshots/whatsapp-config.png";
@@ -28,9 +28,9 @@ const Screenshots = () => {
   
   const activeTabData = tabs.find(t => t.id === activeTab);
 
-  // Auto-rotate tabs every 4 seconds (skip when on video tab)
+  // Auto-rotate tabs every 4 seconds
   useEffect(() => {
-    if (isPaused || activeTab === "cliente") return;
+    if (isPaused) return;
     
     const interval = setInterval(() => {
       setActiveTab(current => {
@@ -43,12 +43,6 @@ const Screenshots = () => {
     return () => clearInterval(interval);
   }, [isPaused, activeTab]);
 
-  // Handle video end - move to next tab after video completes one loop
-  const handleVideoEnded = () => {
-    const currentIndex = tabs.findIndex(t => t.id === "cliente");
-    const nextIndex = (currentIndex + 1) % tabs.length;
-    setActiveTab(tabs[nextIndex].id);
-  };
 
   useEffect(() => {
     const handleShowDemo = () => {
