@@ -6,7 +6,23 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { CheckCircle, Clock, AlertCircle, Loader2, Info } from "lucide-react";
+
+interface StatusService {
+  name: string;
+  status: string;
+  label: string;
+  message?: string;
+}
+
+interface StatusData {
+  summary?: { label?: string };
+  services?: StatusService[];
+  updatedAt?: string;
+  generatedAt?: string;
+  plannedUpdates?: string;
+  infoBlocks?: { title?: string; body?: string }[];
+}
 
 interface FooterModalsProps {
   aboutOpen: boolean;
@@ -29,45 +45,64 @@ const FooterModals = ({
   privacyOpen,
   setPrivacyOpen,
 }: FooterModalsProps) => {
+  const [statusData, setStatusData] = useState<StatusData | null>(null);
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [statusError, setStatusError] = useState(false);
+
   useEffect(() => {
     const handleOpenPrivacy = () => setPrivacyOpen(true);
     document.addEventListener('openPrivacyModal', handleOpenPrivacy);
     return () => document.removeEventListener('openPrivacyModal', handleOpenPrivacy);
   }, [setPrivacyOpen]);
 
-  const systemServices = [
-    { name: "Plataforma Web", status: "operational" },
-    { name: "API de Integração", status: "operational" },
-    { name: "Banco de Dados", status: "operational" },
-    { name: "Serviço de Notificações", status: "operational" },
-    { name: "Painel do Cliente", status: "operational" },
-  ];
+  useEffect(() => {
+    if (statusOpen) {
+      setStatusLoading(true);
+      setStatusError(false);
+      fetch('https://api.assistenciatech.com.br/system/status', { cache: 'no-store' })
+        .then(res => res.json())
+        .then(data => {
+          setStatusData(data);
+          setStatusLoading(false);
+        })
+        .catch(() => {
+          setStatusError(true);
+          setStatusLoading(false);
+        });
+    }
+  }, [statusOpen]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "operational":
+      case "OPERATIONAL":
         return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case "degraded":
+      case "DEGRADED":
         return <AlertCircle className="w-4 h-4 text-yellow-500" />;
-      case "down":
+      case "MAINTENANCE":
+        return <Info className="w-4 h-4 text-blue-500" />;
+      case "OUTAGE":
         return <AlertCircle className="w-4 h-4 text-red-500" />;
       default:
         return <Clock className="w-4 h-4 text-muted-foreground" />;
     }
   };
 
-  const getStatusText = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case "operational":
-        return "Operacional";
-      case "degraded":
-        return "Degradado";
-      case "down":
-        return "Fora do ar";
+      case "OPERATIONAL":
+        return "bg-green-500/10 border-green-500/20 text-green-600";
+      case "DEGRADED":
+        return "bg-yellow-500/10 border-yellow-500/20 text-yellow-600";
+      case "MAINTENANCE":
+        return "bg-blue-500/10 border-blue-500/20 text-blue-600";
+      case "OUTAGE":
+        return "bg-red-500/10 border-red-500/20 text-red-600";
       default:
-        return "Verificando...";
+        return "bg-muted/50 border-border text-muted-foreground";
     }
   };
+
+  const allOperational = statusData?.services?.every(s => s.status === "OPERATIONAL");
 
   return (
     <>
@@ -105,36 +140,75 @@ const FooterModals = ({
       <Dialog open={statusOpen} onOpenChange={setStatusOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-2xl">Status do Sistema</DialogTitle>
+            <DialogTitle className="text-2xl">
+              {statusData?.summary?.label || "Status do Sistema"}
+            </DialogTitle>
             <DialogDescription>
               Monitoramento em tempo real dos nossos serviços
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 mt-4">
-            <div className="flex items-center gap-2 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <span className="font-medium text-green-600">Todos os sistemas operacionais</span>
+
+          {statusLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-primary" />
+              <span className="ml-2 text-muted-foreground">Carregando...</span>
             </div>
-            <div className="space-y-2 mt-4">
-              {systemServices.map((service) => (
-                <div
-                  key={service.name}
-                  className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-                >
-                  <span className="text-sm font-medium">{service.name}</span>
-                  <div className="flex items-center gap-2">
-                    {getStatusIcon(service.status)}
-                    <span className="text-sm text-muted-foreground">
-                      {getStatusText(service.status)}
-                    </span>
-                  </div>
+          ) : statusError ? (
+            <div className="flex items-center gap-2 p-3 bg-red-500/10 rounded-lg border border-red-500/20">
+              <AlertCircle className="w-5 h-5 text-red-500" />
+              <span className="font-medium text-red-600">Falha ao carregar status</span>
+            </div>
+          ) : (
+            <div className="space-y-3 mt-4">
+              {allOperational && (
+                <div className="flex items-center gap-2 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="font-medium text-green-600">Todos os sistemas operacionais</span>
                 </div>
-              ))}
+              )}
+              <div className="space-y-2">
+                {statusData?.services?.map((service) => (
+                  <div
+                    key={service.name}
+                    className={`flex items-center justify-between p-3 rounded-lg border ${getStatusColor(service.status)}`}
+                  >
+                    <span className="text-sm font-medium text-foreground">{service.name}</span>
+                    <div className="flex items-center gap-2">
+                      {getStatusIcon(service.status)}
+                      <span className="text-sm">{service.label}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {statusData?.plannedUpdates && (
+                <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                  <p className="text-sm font-semibold text-foreground mb-1">Atualizações planejadas</p>
+                  <p className="text-xs text-muted-foreground">{statusData.plannedUpdates}</p>
+                </div>
+              )}
+
+              {statusData?.infoBlocks && statusData.infoBlocks.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold text-foreground">Mais informações</p>
+                  {statusData.infoBlocks.map((block, i) => (
+                    <div key={i} className="p-3 border rounded-lg bg-card">
+                      <p className="text-sm font-semibold text-foreground mb-1">{block.title || "Informação"}</p>
+                      <p className="text-xs text-muted-foreground">{block.body}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <p className="text-xs text-muted-foreground text-center pt-4">
+                Atualizado em: {statusData?.updatedAt
+                  ? new Date(statusData.updatedAt).toLocaleString("pt-BR")
+                  : statusData?.generatedAt
+                    ? new Date(statusData.generatedAt).toLocaleString("pt-BR")
+                    : new Date().toLocaleString("pt-BR")}
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground text-center pt-4">
-              Última atualização: {new Date().toLocaleString("pt-BR")}
-            </p>
-          </div>
+          )}
         </DialogContent>
       </Dialog>
 
