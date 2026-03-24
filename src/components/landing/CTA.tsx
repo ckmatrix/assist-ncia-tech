@@ -21,6 +21,7 @@ const CTA = () => {
               <Button 
                 size="lg" 
                 className="bg-card text-foreground hover:bg-card/90 hover:shadow-xl"
+                onClick={() => window.open(`https://wa.me/5511996053510?text=${encodeURIComponent("Olá! Gostaria de começar o teste grátis do Assistência Tech!")}`, "_blank")}
               >
                 Começar Teste Grátis
                 <ArrowRight className="w-5 h-5" />
@@ -29,6 +30,7 @@ const CTA = () => {
                 size="lg" 
                 variant="outline"
                 className="border-2 border-primary-foreground/30 text-primary-foreground bg-transparent hover:bg-primary-foreground/10"
+                onClick={() => window.open(`https://wa.me/5511996053510?text=${encodeURIComponent("Olá! Gostaria de falar com um vendedor sobre o Assistência Tech!")}`, "_blank")}
               >
                 <MessageCircle className="w-5 h-5" />
                 Falar com Vendedor
