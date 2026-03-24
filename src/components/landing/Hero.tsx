@@ -135,7 +135,7 @@ const Hero = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="lg">
+              <Button variant="hero" size="lg" onClick={() => window.open(`https://wa.me/5511996053510?text=${encodeURIComponent("Olá! Gostaria de começar o teste grátis do Assistência Tech!")}`, "_blank")}>
                 Começar Gratuitamente
                 <ArrowRight className="w-5 h-5" />
               </Button>
