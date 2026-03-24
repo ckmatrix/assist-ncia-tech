@@ -1,18 +1,22 @@
-import { useState, useEffect, useRef } from "react";
-import { Camera, Video, Shield } from "lucide-react";
+import { useState, useEffect } from "react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import acompanhamentoOs from "@/assets/screenshots/acompanhamento-os.png";
-import painelCliente from "@/assets/screenshots/painel-cliente.png";
+
 import relatoriosLoja from "@/assets/screenshots/relatorios-loja.png";
 import cadastroOs from "@/assets/screenshots/cadastro-os.png";
 import whatsappConfig from "@/assets/screenshots/whatsapp-config.png";
 import relatoriosGeral from "@/assets/screenshots/relatorios-geral.png";
+import pdvImg from "@/assets/screenshots/pdv.png";
+import portalOsCliente from "@/assets/screenshots/portal-os-cliente.png";
+import portalClienteOs from "@/assets/screenshots/portal-cliente-os.png";
 
 const tabs = [
   { id: "dashboard", label: "Dashboard", description: "Visão geral com métricas e relatórios em tempo real", image: painelRelatorios, isVideo: false },
   { id: "os", label: "Ordens de Serviço", description: "Gerencie todas as OS com filtros e status", image: acompanhamentoOs, isVideo: false },
   { id: "cadastro", label: "Cadastro OS", description: "Cadastre novas ordens de serviço rapidamente", image: cadastroOs, isVideo: false },
-  { id: "cliente", label: "Painel Cliente", description: "Exemplo do painel web do cliente", video: "/videos/painel-cliente.mov", isVideo: true },
+  { id: "pdv", label: "PDV", description: "Ponto de venda com carrinho, produtos e finalização rápida", image: pdvImg, isVideo: false },
+  { id: "portal-os", label: "Portal OS", description: "Consulta de ordem de serviço pelo cliente via Chave Web", image: portalOsCliente, isVideo: false },
+  { id: "cliente", label: "Painel Cliente", description: "Acompanhamento completo da OS pelo cliente", image: portalClienteOs, isVideo: false },
   { id: "financeiro", label: "Financeiro", description: "Controle de receitas, despesas e fluxo de caixa", image: relatoriosLoja, isVideo: false },
   { id: "relatorios", label: "Relatórios", description: "Resumo geral do sistema com exportação em PDF e Excel", image: relatoriosGeral, isVideo: false },
   { id: "whatsapp", label: "WhatsApp", description: "Configure mensagens e integração com WhatsApp", image: whatsappConfig, isVideo: false },
@@ -21,12 +25,12 @@ const tabs = [
 const Screenshots = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isPaused, setIsPaused] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  
   const activeTabData = tabs.find(t => t.id === activeTab);
 
-  // Auto-rotate tabs every 4 seconds (skip when on video tab)
+  // Auto-rotate tabs every 4 seconds
   useEffect(() => {
-    if (isPaused || activeTab === "cliente") return;
+    if (isPaused) return;
     
     const interval = setInterval(() => {
       setActiveTab(current => {
@@ -39,12 +43,6 @@ const Screenshots = () => {
     return () => clearInterval(interval);
   }, [isPaused, activeTab]);
 
-  // Handle video end - move to next tab after video completes one loop
-  const handleVideoEnded = () => {
-    const currentIndex = tabs.findIndex(t => t.id === "cliente");
-    const nextIndex = (currentIndex + 1) % tabs.length;
-    setActiveTab(tabs[nextIndex].id);
-  };
 
   useEffect(() => {
     const handleShowDemo = () => {
@@ -113,57 +111,16 @@ const Screenshots = () => {
                 ? "" 
                 : "bg-secondary/30 flex items-center justify-center p-4"
             }`}>
-              {activeTabData?.isVideo ? (
-                <video 
-                  ref={videoRef}
-                  key={activeTab}
-                  src={activeTabData?.video}
-                  autoPlay
-                  muted
-                  playsInline
-                  onEnded={handleVideoEnded}
-                  className="max-w-full h-auto max-h-[550px] object-contain animate-fade-in rounded-lg"
-                />
-              ) : (
-                <img 
-                  key={activeTab}
-                  src={activeTabData?.image} 
-                  alt={activeTabData?.label}
-                  className={`animate-fade-in ${
-                    activeTab === "cadastro"
-                      ? "h-auto max-h-[550px]"
-                      : "max-w-full h-auto max-h-[550px] object-contain rounded-lg"
-                  }`}
-                />
-              )}
-              
-              {activeTab === "cliente" && (
-                <div className="absolute bottom-6 left-6 right-6 animate-fade-in">
-                  <div className="bg-card/95 backdrop-blur-sm border border-border rounded-xl p-4 shadow-lg">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Shield className="w-5 h-5 text-primary" />
-                      <span className="font-semibold text-foreground">Anexos na OS — acesso para você e seu cliente</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mb-3">
-                      Tudo documentado dentro da ordem de serviço. Proteção garantida para ambos.
-                    </p>
-                    <div className="flex flex-wrap gap-4">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Camera className="w-4 h-4 text-primary" />
-                        <span>Fotos do aparelho</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Video className="w-4 h-4 text-primary" />
-                        <span>Vídeos de funcionamento</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Shield className="w-4 h-4 text-primary" />
-                        <span>Informações detalhadas</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <img 
+                key={activeTab}
+                src={activeTabData?.image} 
+                alt={activeTabData?.label}
+                className={`animate-fade-in ${
+                  activeTab === "cadastro"
+                    ? "h-auto max-h-[550px]"
+                    : "max-w-full h-auto max-h-[550px] object-contain rounded-lg"
+                }`}
+              />
             </div>
           </div>
         </div>
