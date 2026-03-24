@@ -110,6 +110,8 @@ const FooterModals = ({
   const [statusLoading, setStatusLoading] = useState(false);
   const [statusError, setStatusError] = useState(false);
 
+  const [renderData, setRenderData] = useState<RenderData | null>(null);
+
   useEffect(() => {
     const handleOpenPrivacy = () => setPrivacyOpen(true);
     document.addEventListener('openPrivacyModal', handleOpenPrivacy);
@@ -117,11 +119,46 @@ const FooterModals = ({
   }, [setPrivacyOpen]);
 
   useEffect(() => {
-    if (statusOpen) {
-      setStatusLoading(true);
-      setStatusError(false);
-      fetch('https://api.assistenciatech.com.br/system/status', { cache: 'no-store' })
-        .then(res => res.json())
+    if (!statusOpen) return;
+    setStatusLoading(true);
+    setStatusError(false);
+
+    (async () => {
+      try {
+        const data = await fetchWithTimeout('https://api.assistenciatech.com.br/system/status');
+        saveCache(data);
+        const updatedAt = data?.updatedAt ? new Date(data.updatedAt).toLocaleString('pt-BR') : null;
+        const generatedAt = data?.generatedAt ? new Date(data.generatedAt).toLocaleString('pt-BR') : '—';
+        setRenderData({
+          summaryLabel: data?.summary?.label || 'Status do Sistema',
+          subtitle: `Atualizado em: ${updatedAt || generatedAt}`,
+          statusText: data?.statusText || '',
+          services: Array.isArray(data?.services) ? data.services : [],
+          history: Array.isArray(data?.history) ? data.history : [],
+        });
+        setStatusLoading(false);
+      } catch {
+        const cached = loadCache();
+        const cachedAt = cached?.cachedAt ? new Date(cached.cachedAt).toLocaleString('pt-BR') : null;
+        setRenderData({
+          summaryLabel: 'Fora do ar',
+          subtitle: cachedAt
+            ? `Servidor de status indisponível • último status: ${cachedAt}`
+            : 'Servidor de status indisponível',
+          statusText: '',
+          services: DEFAULT_SERVICES.map(s => ({
+            ...s,
+            status: 'OUTAGE',
+            label: 'Fora do ar',
+            message: 'Não foi possível consultar o servidor de status',
+          })),
+          history: Array.isArray(cached?.payload?.history) ? cached.payload.history : [],
+        });
+        setStatusError(true);
+        setStatusLoading(false);
+      }
+    })();
+  }, [statusOpen]);
         .then(data => {
           setStatusData(data);
           setStatusLoading(false);
