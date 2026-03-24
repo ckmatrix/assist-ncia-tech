@@ -6,8 +6,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LogIn, Loader2, AlertCircle } from "lucide-react";
-import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { LogIn, Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
+import { useState, useEffect } from "react";
 import ExpiredModal from "./ExpiredModal";
 
 interface LaunchModalProps {
@@ -21,18 +22,55 @@ interface ExpiredData {
   trustUnlockAvailable?: boolean;
 }
 
+const REMEMBER_KEY = "at_remember_login";
+
 const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [expiredOpen, setExpiredOpen] = useState(false);
   const [expiredData, setExpiredData] = useState<ExpiredData>({});
 
+  // Load saved credentials on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(REMEMBER_KEY);
+      if (saved) {
+        const { email: savedEmail, password: savedPassword } = JSON.parse(saved);
+        if (savedEmail) setEmail(savedEmail);
+        if (savedPassword) setPassword(savedPassword);
+        setRememberMe(true);
+      }
+    } catch {}
+  }, []);
+
+  // Clear fields when modal closes (unless remember is on)
+  const handleOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      setError("");
+      setShowPassword(false);
+      if (!rememberMe) {
+        setEmail("");
+        setPassword("");
+      }
+    }
+    onOpenChange(isOpen);
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+
+    // Save or clear remembered credentials
+    if (rememberMe) {
+      localStorage.setItem(REMEMBER_KEY, JSON.stringify({ email, password }));
+    } else {
+      localStorage.removeItem(REMEMBER_KEY);
+    }
 
     try {
       const res = await fetch("https://api.assistenciatech.com.br/auth/login-code", {
@@ -56,7 +94,7 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
           trustUnlockAvailable: data.trustUnlockAvailable,
         });
         setExpiredOpen(true);
-        onOpenChange(false);
+        handleOpenChange(false);
         setLoading(false);
         return;
       }
@@ -73,7 +111,6 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
         return;
       }
 
-      // Apenas redireciona — quem faz o exchange é o app
       window.location.href = `https://app.assistenciatech.com.br/auth/callback?code=${encodeURIComponent(data.code)}`;
     } catch {
       setError("Erro de conexão. Verifique sua internet e tente novamente.");
@@ -83,7 +120,7 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3 text-2xl">
@@ -114,15 +151,38 @@ const LaunchModal = ({ open, onOpenChange }: LaunchModalProps) => {
               <label htmlFor="password" className="text-sm font-medium text-foreground">
                 Senha
               </label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Sua senha"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Sua senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={loading}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="remember"
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(checked === true)}
                 disabled={loading}
               />
+              <label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer select-none">
+                Lembrar meu login
+              </label>
             </div>
 
             {error && (
