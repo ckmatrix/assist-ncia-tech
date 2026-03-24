@@ -320,6 +320,16 @@ const FooterModals = ({
                 </div>
               )}
 
+              {/* Link to full status page */}
+              <div className="text-center pt-2">
+                <a
+                  href="/status#historico"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                >
+                  Ver histórico completo →
+                </a>
+              </div>
+
               <p className="text-xs text-muted-foreground text-center pt-4">
                 {renderData.subtitle}
               </p>
