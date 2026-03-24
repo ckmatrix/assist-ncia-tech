@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import { Camera, Video, Shield } from "lucide-react";
+import { useState, useEffect } from "react";
 import painelRelatorios from "@/assets/screenshots/painel-relatorios.png";
 import acompanhamentoOs from "@/assets/screenshots/acompanhamento-os.png";
 import painelCliente from "@/assets/screenshots/painel-cliente.png";
