@@ -41,6 +41,7 @@ interface RenderData {
   statusText: string;
   services: StatusService[];
   history: HistoryEntry[];
+  plannedUpdates?: string;
 }
 
 const CACHE_KEY = 'system_status_cache_v1';
@@ -134,6 +135,7 @@ const FooterModals = ({
           statusText: data?.statusText || '',
           services: Array.isArray(data?.services) ? data.services : [],
           history: Array.isArray(data?.history) ? data.history : [],
+          plannedUpdates: data?.plannedUpdates || '',
         });
         setStatusLoading(false);
       } catch {
@@ -283,6 +285,14 @@ const FooterModals = ({
                 ))}
               </div>
 
+
+              {/* Planned Updates */}
+              {renderData.plannedUpdates && (
+                <div className="p-3 rounded-lg border border-blue-500/20 bg-blue-500/10 space-y-1">
+                  <p className="text-sm font-semibold text-blue-700">Atualizações planejadas</p>
+                  <p className="text-xs text-blue-600">{renderData.plannedUpdates}</p>
+                </div>
+              )}
 
               {/* History */}
               {renderData.history.length > 0 && (
