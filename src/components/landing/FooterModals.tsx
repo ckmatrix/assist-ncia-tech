@@ -159,16 +159,6 @@ const FooterModals = ({
       }
     })();
   }, [statusOpen]);
-        .then(data => {
-          setStatusData(data);
-          setStatusLoading(false);
-        })
-        .catch(() => {
-          setStatusError(true);
-          setStatusLoading(false);
-        });
-    }
-  }, [statusOpen]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -200,7 +190,22 @@ const FooterModals = ({
     }
   };
 
-  const allOperational = statusData?.services?.every(s => s.status === "OPERATIONAL");
+  const getHistoryPillColor = (status: string) => {
+    switch (status) {
+      case "OPERATIONAL":
+        return "bg-green-500/10 border border-green-500/20 text-green-600";
+      case "DEGRADED":
+        return "bg-yellow-500/10 border border-yellow-500/20 text-yellow-600";
+      case "MAINTENANCE":
+        return "bg-blue-500/10 border border-blue-500/20 text-blue-600";
+      case "OUTAGE":
+        return "bg-red-500/10 border border-red-500/20 text-red-600";
+      default:
+        return "bg-muted/50 border border-border text-muted-foreground";
+    }
+  };
+
+  const allOperational = renderData?.services?.every(s => s.status === "OPERATIONAL");
 
   return (
     <>
@@ -236,13 +241,13 @@ const FooterModals = ({
 
       {/* System Status Modal */}
       <Dialog open={statusOpen} onOpenChange={setStatusOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl">
-              {statusData?.summary?.label || "Status do Sistema"}
+              {renderData?.summaryLabel || "Status do Sistema"}
             </DialogTitle>
             <DialogDescription>
-              Monitoramento em tempo real dos nossos serviços
+              {renderData?.subtitle || "Monitoramento em tempo real dos nossos serviços"}
             </DialogDescription>
           </DialogHeader>
 
@@ -251,21 +256,21 @@ const FooterModals = ({
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
               <span className="ml-2 text-muted-foreground">Carregando...</span>
             </div>
-          ) : statusError ? (
-            <div className="flex items-center gap-2 p-3 bg-red-500/10 rounded-lg border border-red-500/20">
-              <AlertCircle className="w-5 h-5 text-red-500" />
-              <span className="font-medium text-red-600">Falha ao carregar status</span>
-            </div>
-          ) : (
+          ) : renderData ? (
             <div className="space-y-3 mt-4">
-              {allOperational && (
+              {renderData.statusText && (
+                <p className="text-sm text-muted-foreground">{renderData.statusText}</p>
+              )}
+
+              {allOperational && !statusError && (
                 <div className="flex items-center gap-2 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
                   <CheckCircle className="w-5 h-5 text-green-500" />
                   <span className="font-medium text-green-600">Todos os sistemas operacionais</span>
                 </div>
               )}
+
               <div className="space-y-2">
-                {statusData?.services?.map((service) => (
+                {renderData.services.map((service) => (
                   <div
                     key={service.name}
                     className={`flex items-center justify-between p-3 rounded-lg border ${getStatusColor(service.status)}`}
@@ -279,34 +284,39 @@ const FooterModals = ({
                 ))}
               </div>
 
-              {statusData?.plannedUpdates && (
-                <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                  <p className="text-sm font-semibold text-foreground mb-1">Atualizações planejadas</p>
-                  <p className="text-xs text-muted-foreground">{statusData.plannedUpdates}</p>
-                </div>
+              {service.message && (
+                <p className="text-xs text-muted-foreground mt-1">{service.message}</p>
               )}
 
-              {statusData?.infoBlocks && statusData.infoBlocks.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold text-foreground">Mais informações</p>
-                  {statusData.infoBlocks.map((block, i) => (
-                    <div key={i} className="p-3 border rounded-lg bg-card">
-                      <p className="text-sm font-semibold text-foreground mb-1">{block.title || "Informação"}</p>
-                      <p className="text-xs text-muted-foreground">{block.body}</p>
+              {/* History */}
+              {renderData.history.length > 0 && (
+                <div className="space-y-2 pt-2">
+                  <p className="text-sm font-semibold text-foreground">Histórico recente</p>
+                  {renderData.history.slice(0, 6).map((h, i) => (
+                    <div key={i} className="p-3 border rounded-lg bg-card space-y-1">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{h.title || "Atualização"}</p>
+                          <p className="text-[10px] text-muted-foreground">
+                            {h.createdAt ? new Date(h.createdAt).toLocaleString("pt-BR") : "—"}
+                            {h.resolvedAt && ` • resolvido em ${new Date(h.resolvedAt).toLocaleString("pt-BR")}`}
+                          </p>
+                        </div>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${getHistoryPillColor(h.status)}`}>
+                          {h.status}
+                        </span>
+                      </div>
+                      {h.body && <p className="text-xs text-muted-foreground">{h.body}</p>}
                     </div>
                   ))}
                 </div>
               )}
 
               <p className="text-xs text-muted-foreground text-center pt-4">
-                Atualizado em: {statusData?.updatedAt
-                  ? new Date(statusData.updatedAt).toLocaleString("pt-BR")
-                  : statusData?.generatedAt
-                    ? new Date(statusData.generatedAt).toLocaleString("pt-BR")
-                    : new Date().toLocaleString("pt-BR")}
+                {renderData.subtitle}
               </p>
             </div>
-          )}
+          ) : null}
         </DialogContent>
       </Dialog>
 
