@@ -10,19 +10,80 @@ import { CheckCircle, Clock, AlertCircle, Loader2, Info } from "lucide-react";
 
 interface StatusService {
   name: string;
+  key?: string;
   status: string;
   label: string;
   message?: string;
 }
 
+interface HistoryEntry {
+  title?: string;
+  body?: string;
+  status: string;
+  createdAt?: string;
+  resolvedAt?: string;
+}
+
 interface StatusData {
   summary?: { label?: string };
   services?: StatusService[];
+  history?: HistoryEntry[];
   updatedAt?: string;
   generatedAt?: string;
+  statusText?: string;
   plannedUpdates?: string;
   infoBlocks?: { title?: string; body?: string }[];
 }
+
+interface RenderData {
+  summaryLabel: string;
+  subtitle: string;
+  statusText: string;
+  services: StatusService[];
+  history: HistoryEntry[];
+}
+
+const CACHE_KEY = 'system_status_cache_v1';
+const TIMEOUT_MS = 2500;
+
+const DEFAULT_SERVICES: { key: string; name: string }[] = [
+  { key: 'web', name: 'Plataforma Web' },
+  { key: 'integration_api', name: 'API de Integração' },
+  { key: 'database', name: 'Banco de Dados' },
+  { key: 'notifications', name: 'Serviço de Notificações' },
+  { key: 'client_portal', name: 'Painel do Cliente' },
+];
+
+const loadCache = (): { cachedAt?: string; payload?: StatusData } | null => {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return null;
+    return parsed;
+  } catch { return null; }
+};
+
+const saveCache = (payload: StatusData) => {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+      cachedAt: new Date().toISOString(),
+      payload
+    }));
+  } catch { void 0; }
+};
+
+const fetchWithTimeout = async (url: string): Promise<StatusData> => {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { cache: 'no-store', signal: ctrl.signal });
+    if (!res.ok) throw new Error('http_' + res.status);
+    return await res.json();
+  } finally {
+    clearTimeout(t);
+  }
+};
 
 interface FooterModalsProps {
   aboutOpen: boolean;
@@ -45,9 +106,10 @@ const FooterModals = ({
   privacyOpen,
   setPrivacyOpen,
 }: FooterModalsProps) => {
-  const [statusData, setStatusData] = useState<StatusData | null>(null);
   const [statusLoading, setStatusLoading] = useState(false);
   const [statusError, setStatusError] = useState(false);
+
+  const [renderData, setRenderData] = useState<RenderData | null>(null);
 
   useEffect(() => {
     const handleOpenPrivacy = () => setPrivacyOpen(true);
@@ -56,20 +118,45 @@ const FooterModals = ({
   }, [setPrivacyOpen]);
 
   useEffect(() => {
-    if (statusOpen) {
-      setStatusLoading(true);
-      setStatusError(false);
-      fetch('https://api.assistenciatech.com.br/system/status', { cache: 'no-store' })
-        .then(res => res.json())
-        .then(data => {
-          setStatusData(data);
-          setStatusLoading(false);
-        })
-        .catch(() => {
-          setStatusError(true);
-          setStatusLoading(false);
+    if (!statusOpen) return;
+    setStatusLoading(true);
+    setStatusError(false);
+
+    (async () => {
+      try {
+        const data = await fetchWithTimeout('https://api.assistenciatech.com.br/system/status');
+        saveCache(data);
+        const updatedAt = data?.updatedAt ? new Date(data.updatedAt).toLocaleString('pt-BR') : null;
+        const generatedAt = data?.generatedAt ? new Date(data.generatedAt).toLocaleString('pt-BR') : '—';
+        setRenderData({
+          summaryLabel: data?.summary?.label || 'Status do Sistema',
+          subtitle: `Atualizado em: ${updatedAt || generatedAt}`,
+          statusText: data?.statusText || '',
+          services: Array.isArray(data?.services) ? data.services : [],
+          history: Array.isArray(data?.history) ? data.history : [],
         });
-    }
+        setStatusLoading(false);
+      } catch {
+        const cached = loadCache();
+        const cachedAt = cached?.cachedAt ? new Date(cached.cachedAt).toLocaleString('pt-BR') : null;
+        setRenderData({
+          summaryLabel: 'Fora do ar',
+          subtitle: cachedAt
+            ? `Servidor de status indisponível • último status: ${cachedAt}`
+            : 'Servidor de status indisponível',
+          statusText: '',
+          services: DEFAULT_SERVICES.map(s => ({
+            ...s,
+            status: 'OUTAGE',
+            label: 'Fora do ar',
+            message: 'Não foi possível consultar o servidor de status',
+          })),
+          history: Array.isArray(cached?.payload?.history) ? cached.payload.history : [],
+        });
+        setStatusError(true);
+        setStatusLoading(false);
+      }
+    })();
   }, [statusOpen]);
 
   const getStatusIcon = (status: string) => {
@@ -102,7 +189,22 @@ const FooterModals = ({
     }
   };
 
-  const allOperational = statusData?.services?.every(s => s.status === "OPERATIONAL");
+  const getHistoryPillColor = (status: string) => {
+    switch (status) {
+      case "OPERATIONAL":
+        return "bg-green-500/10 border border-green-500/20 text-green-600";
+      case "DEGRADED":
+        return "bg-yellow-500/10 border border-yellow-500/20 text-yellow-600";
+      case "MAINTENANCE":
+        return "bg-blue-500/10 border border-blue-500/20 text-blue-600";
+      case "OUTAGE":
+        return "bg-red-500/10 border border-red-500/20 text-red-600";
+      default:
+        return "bg-muted/50 border border-border text-muted-foreground";
+    }
+  };
+
+  const allOperational = renderData?.services?.every(s => s.status === "OPERATIONAL");
 
   return (
     <>
@@ -138,13 +240,13 @@ const FooterModals = ({
 
       {/* System Status Modal */}
       <Dialog open={statusOpen} onOpenChange={setStatusOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl">
-              {statusData?.summary?.label || "Status do Sistema"}
+              {renderData?.summaryLabel || "Status do Sistema"}
             </DialogTitle>
             <DialogDescription>
-              Monitoramento em tempo real dos nossos serviços
+              {renderData?.subtitle || "Monitoramento em tempo real dos nossos serviços"}
             </DialogDescription>
           </DialogHeader>
 
@@ -153,21 +255,21 @@ const FooterModals = ({
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
               <span className="ml-2 text-muted-foreground">Carregando...</span>
             </div>
-          ) : statusError ? (
-            <div className="flex items-center gap-2 p-3 bg-red-500/10 rounded-lg border border-red-500/20">
-              <AlertCircle className="w-5 h-5 text-red-500" />
-              <span className="font-medium text-red-600">Falha ao carregar status</span>
-            </div>
-          ) : (
+          ) : renderData ? (
             <div className="space-y-3 mt-4">
-              {allOperational && (
+              {renderData.statusText && (
+                <p className="text-sm text-muted-foreground">{renderData.statusText}</p>
+              )}
+
+              {allOperational && !statusError && (
                 <div className="flex items-center gap-2 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
                   <CheckCircle className="w-5 h-5 text-green-500" />
                   <span className="font-medium text-green-600">Todos os sistemas operacionais</span>
                 </div>
               )}
+
               <div className="space-y-2">
-                {statusData?.services?.map((service) => (
+                {renderData.services.map((service) => (
                   <div
                     key={service.name}
                     className={`flex items-center justify-between p-3 rounded-lg border ${getStatusColor(service.status)}`}
@@ -181,34 +283,36 @@ const FooterModals = ({
                 ))}
               </div>
 
-              {statusData?.plannedUpdates && (
-                <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                  <p className="text-sm font-semibold text-foreground mb-1">Atualizações planejadas</p>
-                  <p className="text-xs text-muted-foreground">{statusData.plannedUpdates}</p>
-                </div>
-              )}
 
-              {statusData?.infoBlocks && statusData.infoBlocks.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold text-foreground">Mais informações</p>
-                  {statusData.infoBlocks.map((block, i) => (
-                    <div key={i} className="p-3 border rounded-lg bg-card">
-                      <p className="text-sm font-semibold text-foreground mb-1">{block.title || "Informação"}</p>
-                      <p className="text-xs text-muted-foreground">{block.body}</p>
+              {/* History */}
+              {renderData.history.length > 0 && (
+                <div className="space-y-2 pt-2">
+                  <p className="text-sm font-semibold text-foreground">Histórico recente</p>
+                  {renderData.history.slice(0, 6).map((h, i) => (
+                    <div key={i} className="p-3 border rounded-lg bg-card space-y-1">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{h.title || "Atualização"}</p>
+                          <p className="text-[10px] text-muted-foreground">
+                            {h.createdAt ? new Date(h.createdAt).toLocaleString("pt-BR") : "—"}
+                            {h.resolvedAt && ` • resolvido em ${new Date(h.resolvedAt).toLocaleString("pt-BR")}`}
+                          </p>
+                        </div>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${getHistoryPillColor(h.status)}`}>
+                          {h.status}
+                        </span>
+                      </div>
+                      {h.body && <p className="text-xs text-muted-foreground">{h.body}</p>}
                     </div>
                   ))}
                 </div>
               )}
 
               <p className="text-xs text-muted-foreground text-center pt-4">
-                Atualizado em: {statusData?.updatedAt
-                  ? new Date(statusData.updatedAt).toLocaleString("pt-BR")
-                  : statusData?.generatedAt
-                    ? new Date(statusData.generatedAt).toLocaleString("pt-BR")
-                    : new Date().toLocaleString("pt-BR")}
+                {renderData.subtitle}
               </p>
             </div>
-          )}
+          ) : null}
         </DialogContent>
       </Dialog>
 
