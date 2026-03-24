@@ -284,9 +284,6 @@ const FooterModals = ({
                 ))}
               </div>
 
-              {service.message && (
-                <p className="text-xs text-muted-foreground mt-1">{service.message}</p>
-              )}
 
               {/* History */}
               {renderData.history.length > 0 && (
