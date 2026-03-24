@@ -118,47 +118,53 @@ const FooterModals = ({
     return () => document.removeEventListener('openPrivacyModal', handleOpenPrivacy);
   }, [setPrivacyOpen]);
 
+  const loadStatus = async (showLoader = true) => {
+    if (showLoader) {
+      setStatusLoading(true);
+      setStatusError(false);
+    }
+    try {
+      const data = await fetchWithTimeout('https://api.assistenciatech.com.br/system/status');
+      saveCache(data);
+      const updatedAt = data?.updatedAt ? new Date(data.updatedAt).toLocaleString('pt-BR') : null;
+      const generatedAt = data?.generatedAt ? new Date(data.generatedAt).toLocaleString('pt-BR') : '—';
+      setRenderData({
+        summaryLabel: data?.summary?.label || 'Status do Sistema',
+        subtitle: `Atualizado em: ${updatedAt || generatedAt}`,
+        statusText: data?.statusText || '',
+        services: Array.isArray(data?.services) ? data.services : [],
+        history: Array.isArray(data?.history) ? data.history : [],
+        plannedUpdates: data?.plannedUpdates || '',
+      });
+      setStatusError(false);
+    } catch {
+      const cached = loadCache();
+      const cachedAt = cached?.cachedAt ? new Date(cached.cachedAt).toLocaleString('pt-BR') : null;
+      setRenderData({
+        summaryLabel: 'Fora do ar',
+        subtitle: cachedAt
+          ? `Servidor de status indisponível • último status: ${cachedAt}`
+          : 'Servidor de status indisponível',
+        statusText: '',
+        services: DEFAULT_SERVICES.map(s => ({
+          ...s,
+          status: 'OUTAGE',
+          label: 'Fora do ar',
+          message: 'Não foi possível consultar o servidor de status',
+        })),
+        history: Array.isArray(cached?.payload?.history) ? cached.payload.history : [],
+      });
+      setStatusError(true);
+    } finally {
+      setStatusLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!statusOpen) return;
-    setStatusLoading(true);
-    setStatusError(false);
-
-    (async () => {
-      try {
-        const data = await fetchWithTimeout('https://api.assistenciatech.com.br/system/status');
-        saveCache(data);
-        const updatedAt = data?.updatedAt ? new Date(data.updatedAt).toLocaleString('pt-BR') : null;
-        const generatedAt = data?.generatedAt ? new Date(data.generatedAt).toLocaleString('pt-BR') : '—';
-        setRenderData({
-          summaryLabel: data?.summary?.label || 'Status do Sistema',
-          subtitle: `Atualizado em: ${updatedAt || generatedAt}`,
-          statusText: data?.statusText || '',
-          services: Array.isArray(data?.services) ? data.services : [],
-          history: Array.isArray(data?.history) ? data.history : [],
-          plannedUpdates: data?.plannedUpdates || '',
-        });
-        setStatusLoading(false);
-      } catch {
-        const cached = loadCache();
-        const cachedAt = cached?.cachedAt ? new Date(cached.cachedAt).toLocaleString('pt-BR') : null;
-        setRenderData({
-          summaryLabel: 'Fora do ar',
-          subtitle: cachedAt
-            ? `Servidor de status indisponível • último status: ${cachedAt}`
-            : 'Servidor de status indisponível',
-          statusText: '',
-          services: DEFAULT_SERVICES.map(s => ({
-            ...s,
-            status: 'OUTAGE',
-            label: 'Fora do ar',
-            message: 'Não foi possível consultar o servidor de status',
-          })),
-          history: Array.isArray(cached?.payload?.history) ? cached.payload.history : [],
-        });
-        setStatusError(true);
-        setStatusLoading(false);
-      }
-    })();
+    loadStatus(true);
+    const interval = setInterval(() => loadStatus(false), 30000);
+    return () => clearInterval(interval);
   }, [statusOpen]);
 
   const ptLabel = (s: string) => ({ OPERATIONAL: 'Operacional', DEGRADED: 'Instável', MAINTENANCE: 'Manutenção', OUTAGE: 'Fora do ar' }[String(s || '').toUpperCase()] || String(s || ''));

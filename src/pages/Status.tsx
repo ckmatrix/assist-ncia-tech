@@ -166,48 +166,53 @@ const Status = () => {
     }
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const d = await fetchWithTimeout<StatusData>("https://api.assistenciatech.com.br/system/status");
-        saveCache(d);
-        const updatedAt = d?.updatedAt ? new Date(d.updatedAt).toLocaleString("pt-BR") : null;
-        const generatedAt = d?.generatedAt ? new Date(d.generatedAt).toLocaleString("pt-BR") : "—";
-        setData({
-          summaryLabel: d?.summary?.label || "Status do Sistema",
-          subtitle: `Atualizado em: ${updatedAt || generatedAt}`,
-          statusText: d?.statusText || "",
-          services: Array.isArray(d?.services) ? d.services : [],
-          plannedUpdates: d?.plannedUpdates || "",
-          infoBlocks: Array.isArray(d?.infoBlocks) ? d.infoBlocks : [],
-        });
-        // Use inline history as initial, then fetch paginated
-        setHistoryItems(Array.isArray(d?.history) ? d.history : []);
-      } catch {
-        const cached = loadCache();
-        const cachedAt = cached?.cachedAt ? new Date(cached.cachedAt).toLocaleString("pt-BR") : null;
-        setData({
-          summaryLabel: "Fora do ar",
-          subtitle: cachedAt
-            ? `Servidor de status indisponível • último status: ${cachedAt}`
-            : "Servidor de status indisponível",
-          statusText: "",
-          services: DEFAULT_SERVICES.map((s) => ({
-            ...s,
-            status: "OUTAGE",
-            label: "Fora do ar",
-            message: "Não foi possível consultar o servidor de status",
-          })),
-          plannedUpdates: "",
-          infoBlocks: [],
-        });
-        setHistoryItems(Array.isArray(cached?.payload?.history) ? cached.payload.history : []);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    })();
+  const loadStatus = useCallback(async (showLoader = true) => {
+    if (showLoader) setLoading(true);
+    try {
+      const d = await fetchWithTimeout<StatusData>("https://api.assistenciatech.com.br/system/status");
+      saveCache(d);
+      const updatedAt = d?.updatedAt ? new Date(d.updatedAt).toLocaleString("pt-BR") : null;
+      const generatedAt = d?.generatedAt ? new Date(d.generatedAt).toLocaleString("pt-BR") : "—";
+      setData({
+        summaryLabel: d?.summary?.label || "Status do Sistema",
+        subtitle: `Atualizado em: ${updatedAt || generatedAt}`,
+        statusText: d?.statusText || "",
+        services: Array.isArray(d?.services) ? d.services : [],
+        plannedUpdates: d?.plannedUpdates || "",
+        infoBlocks: Array.isArray(d?.infoBlocks) ? d.infoBlocks : [],
+      });
+      setHistoryItems(Array.isArray(d?.history) ? d.history : []);
+      setError(false);
+    } catch {
+      const cached = loadCache();
+      const cachedAt = cached?.cachedAt ? new Date(cached.cachedAt).toLocaleString("pt-BR") : null;
+      setData({
+        summaryLabel: "Fora do ar",
+        subtitle: cachedAt
+          ? `Servidor de status indisponível • último status: ${cachedAt}`
+          : "Servidor de status indisponível",
+        statusText: "",
+        services: DEFAULT_SERVICES.map((s) => ({
+          ...s,
+          status: "OUTAGE",
+          label: "Fora do ar",
+          message: "Não foi possível consultar o servidor de status",
+        })),
+        plannedUpdates: "",
+        infoBlocks: [],
+      });
+      setHistoryItems(Array.isArray(cached?.payload?.history) ? cached.payload.history : []);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadStatus(true);
+    const interval = setInterval(() => loadStatus(false), 30000);
+    return () => clearInterval(interval);
+  }, [loadStatus]);
 
   // Fetch paginated history on mount
   useEffect(() => {
