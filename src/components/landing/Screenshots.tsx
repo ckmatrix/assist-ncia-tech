@@ -118,57 +118,16 @@ const Screenshots = () => {
                 ? "" 
                 : "bg-secondary/30 flex items-center justify-center p-4"
             }`}>
-              {activeTabData?.isVideo ? (
-                <video 
-                  ref={videoRef}
-                  key={activeTab}
-                  src={activeTabData?.video}
-                  autoPlay
-                  muted
-                  playsInline
-                  onEnded={handleVideoEnded}
-                  className="max-w-full h-auto max-h-[550px] object-contain animate-fade-in rounded-lg"
-                />
-              ) : (
-                <img 
-                  key={activeTab}
-                  src={activeTabData?.image} 
-                  alt={activeTabData?.label}
-                  className={`animate-fade-in ${
-                    activeTab === "cadastro"
-                      ? "h-auto max-h-[550px]"
-                      : "max-w-full h-auto max-h-[550px] object-contain rounded-lg"
-                  }`}
-                />
-              )}
-              
-              {activeTab === "cliente" && (
-                <div className="absolute bottom-6 left-6 right-6 animate-fade-in">
-                  <div className="bg-card/95 backdrop-blur-sm border border-border rounded-xl p-4 shadow-lg">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Shield className="w-5 h-5 text-primary" />
-                      <span className="font-semibold text-foreground">Anexos na OS — acesso para você e seu cliente</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mb-3">
-                      Tudo documentado dentro da ordem de serviço. Proteção garantida para ambos.
-                    </p>
-                    <div className="flex flex-wrap gap-4">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Camera className="w-4 h-4 text-primary" />
-                        <span>Fotos do aparelho</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Video className="w-4 h-4 text-primary" />
-                        <span>Vídeos de funcionamento</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Shield className="w-4 h-4 text-primary" />
-                        <span>Informações detalhadas</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <img 
+                key={activeTab}
+                src={activeTabData?.image} 
+                alt={activeTabData?.label}
+                className={`animate-fade-in ${
+                  activeTab === "cadastro"
+                    ? "h-auto max-h-[550px]"
+                    : "max-w-full h-auto max-h-[550px] object-contain rounded-lg"
+                }`}
+              />
             </div>
           </div>
         </div>
