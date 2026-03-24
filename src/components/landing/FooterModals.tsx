@@ -106,7 +106,6 @@ const FooterModals = ({
   privacyOpen,
   setPrivacyOpen,
 }: FooterModalsProps) => {
-  const [statusData, setStatusData] = useState<StatusData | null>(null);
   const [statusLoading, setStatusLoading] = useState(false);
   const [statusError, setStatusError] = useState(false);
 
