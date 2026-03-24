@@ -10,19 +10,80 @@ import { CheckCircle, Clock, AlertCircle, Loader2, Info } from "lucide-react";
 
 interface StatusService {
   name: string;
+  key?: string;
   status: string;
   label: string;
   message?: string;
 }
 
+interface HistoryEntry {
+  title?: string;
+  body?: string;
+  status: string;
+  createdAt?: string;
+  resolvedAt?: string;
+}
+
 interface StatusData {
   summary?: { label?: string };
   services?: StatusService[];
+  history?: HistoryEntry[];
   updatedAt?: string;
   generatedAt?: string;
+  statusText?: string;
   plannedUpdates?: string;
   infoBlocks?: { title?: string; body?: string }[];
 }
+
+interface RenderData {
+  summaryLabel: string;
+  subtitle: string;
+  statusText: string;
+  services: StatusService[];
+  history: HistoryEntry[];
+}
+
+const CACHE_KEY = 'system_status_cache_v1';
+const TIMEOUT_MS = 2500;
+
+const DEFAULT_SERVICES: { key: string; name: string }[] = [
+  { key: 'web', name: 'Plataforma Web' },
+  { key: 'integration_api', name: 'API de Integração' },
+  { key: 'database', name: 'Banco de Dados' },
+  { key: 'notifications', name: 'Serviço de Notificações' },
+  { key: 'client_portal', name: 'Painel do Cliente' },
+];
+
+const loadCache = (): { cachedAt?: string; payload?: StatusData } | null => {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return null;
+    return parsed;
+  } catch { return null; }
+};
+
+const saveCache = (payload: StatusData) => {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+      cachedAt: new Date().toISOString(),
+      payload
+    }));
+  } catch { void 0; }
+};
+
+const fetchWithTimeout = async (url: string): Promise<StatusData> => {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { cache: 'no-store', signal: ctrl.signal });
+    if (!res.ok) throw new Error('http_' + res.status);
+    return await res.json();
+  } finally {
+    clearTimeout(t);
+  }
+};
 
 interface FooterModalsProps {
   aboutOpen: boolean;
