@@ -161,6 +161,8 @@ const FooterModals = ({
     })();
   }, [statusOpen]);
 
+  const ptLabel = (s: string) => ({ OPERATIONAL: 'Operacional', DEGRADED: 'Instável', MAINTENANCE: 'Manutenção', OUTAGE: 'Fora do ar' }[String(s || '').toUpperCase()] || String(s || ''));
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "OPERATIONAL":
@@ -309,7 +311,7 @@ const FooterModals = ({
                           </p>
                         </div>
                         <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${getHistoryPillColor(h.status)}`}>
-                          {h.status}
+                          {ptLabel(h.status)}
                         </span>
                       </div>
                       {h.body && <p className="text-xs text-muted-foreground">{h.body}</p>}
