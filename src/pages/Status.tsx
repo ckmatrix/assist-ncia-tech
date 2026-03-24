@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { CheckCircle, AlertCircle, Info, Clock, Loader2, ArrowLeft } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { CheckCircle, AlertCircle, Info, Clock, Loader2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface StatusService {
@@ -14,6 +14,7 @@ interface HistoryEntry {
   title?: string;
   body?: string;
   status: string;
+  statusLabel?: string;
   createdAt?: string;
   resolvedAt?: string;
 }
@@ -29,8 +30,16 @@ interface StatusData {
   infoBlocks?: { title?: string; body?: string }[];
 }
 
+interface HistoryResponse {
+  history?: HistoryEntry[];
+  total?: number;
+  page?: number;
+  totalPages?: number;
+}
+
 const CACHE_KEY = "system_status_cache_v1";
 const TIMEOUT_MS = 2500;
+const HISTORY_PER_PAGE = 20;
 
 const DEFAULT_SERVICES = [
   { key: "web", name: "Plataforma Web" },
@@ -64,7 +73,7 @@ const saveCache = (payload: StatusData) => {
   }
 };
 
-const fetchWithTimeout = async (url: string): Promise<StatusData> => {
+const fetchWithTimeout = async <T = unknown>(url: string): Promise<T> => {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
@@ -129,17 +138,38 @@ const Status = () => {
     subtitle: string;
     statusText: string;
     services: StatusService[];
-    history: HistoryEntry[];
     plannedUpdates: string;
     infoBlocks: { title?: string; body?: string }[];
   } | null>(null);
 
+  // Paginated history
+  const [historyItems, setHistoryItems] = useState<HistoryEntry[]>([]);
+  const [historyPage, setHistoryPage] = useState(1);
+  const [historyTotalPages, setHistoryTotalPages] = useState(1);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
   const histRef = useRef<HTMLDivElement>(null);
+
+  const fetchHistory = useCallback(async (page: number) => {
+    setHistoryLoading(true);
+    try {
+      const res = await fetchWithTimeout<HistoryResponse>(
+        `https://api.assistenciatech.com.br/system/status/history?limit=${HISTORY_PER_PAGE}&page=${page}`
+      );
+      setHistoryItems(Array.isArray(res?.history) ? res.history : []);
+      setHistoryTotalPages(res?.totalPages || 1);
+      setHistoryPage(res?.page || page);
+    } catch {
+      // fallback: keep current items
+    } finally {
+      setHistoryLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
       try {
-        const d = await fetchWithTimeout("https://api.assistenciatech.com.br/system/status");
+        const d = await fetchWithTimeout<StatusData>("https://api.assistenciatech.com.br/system/status");
         saveCache(d);
         const updatedAt = d?.updatedAt ? new Date(d.updatedAt).toLocaleString("pt-BR") : null;
         const generatedAt = d?.generatedAt ? new Date(d.generatedAt).toLocaleString("pt-BR") : "—";
@@ -148,10 +178,11 @@ const Status = () => {
           subtitle: `Atualizado em: ${updatedAt || generatedAt}`,
           statusText: d?.statusText || "",
           services: Array.isArray(d?.services) ? d.services : [],
-          history: Array.isArray(d?.history) ? d.history : [],
           plannedUpdates: d?.plannedUpdates || "",
           infoBlocks: Array.isArray(d?.infoBlocks) ? d.infoBlocks : [],
         });
+        // Use inline history as initial, then fetch paginated
+        setHistoryItems(Array.isArray(d?.history) ? d.history : []);
       } catch {
         const cached = loadCache();
         const cachedAt = cached?.cachedAt ? new Date(cached.cachedAt).toLocaleString("pt-BR") : null;
@@ -167,10 +198,10 @@ const Status = () => {
             label: "Fora do ar",
             message: "Não foi possível consultar o servidor de status",
           })),
-          history: Array.isArray(cached?.payload?.history) ? cached.payload.history : [],
           plannedUpdates: "",
           infoBlocks: [],
         });
+        setHistoryItems(Array.isArray(cached?.payload?.history) ? cached.payload.history : []);
         setError(true);
       } finally {
         setLoading(false);
@@ -178,12 +209,22 @@ const Status = () => {
     })();
   }, []);
 
+  // Fetch paginated history on mount
+  useEffect(() => {
+    fetchHistory(1);
+  }, [fetchHistory]);
+
   // Scroll to #historico on load
   useEffect(() => {
     if (!loading && window.location.hash === "#historico" && histRef.current) {
       setTimeout(() => histRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
     }
   }, [loading]);
+
+  const handlePageChange = (newPage: number) => {
+    fetchHistory(newPage);
+    histRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const allOperational = data?.services?.every((s) => s.status === "OPERATIONAL");
 
@@ -270,32 +311,72 @@ const Status = () => {
               </div>
             )}
 
-            {/* History */}
+            {/* Paginated History */}
             <div ref={histRef} id="historico" className="space-y-3 pt-2">
-              <h2 className="text-lg font-semibold text-foreground">Histórico</h2>
-              {data.history.length > 0 ? (
-                data.history.map((h, i) => (
-                  <div key={i} className="p-4 border rounded-lg bg-card space-y-1">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">
-                          {h.title || "Atualização"}
-                        </p>
-                        <p className="text-[11px] text-muted-foreground">
-                          {h.createdAt ? new Date(h.createdAt).toLocaleString("pt-BR") : "—"}
-                          {h.resolvedAt &&
-                            ` • resolvido em ${new Date(h.resolvedAt).toLocaleString("pt-BR")}`}
-                        </p>
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-foreground">Histórico</h2>
+                {historyTotalPages > 1 && (
+                  <span className="text-xs text-muted-foreground">
+                    Página {historyPage} de {historyTotalPages}
+                  </span>
+                )}
+              </div>
+
+              {historyLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                  <span className="ml-2 text-sm text-muted-foreground">Carregando histórico...</span>
+                </div>
+              ) : historyItems.length > 0 ? (
+                <>
+                  {historyItems.map((h, i) => (
+                    <div key={i} className="p-4 border rounded-lg bg-card space-y-1">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">
+                            {h.title || "Atualização"}
+                          </p>
+                          <p className="text-[11px] text-muted-foreground">
+                            {h.createdAt ? new Date(h.createdAt).toLocaleString("pt-BR") : "—"}
+                            {h.resolvedAt &&
+                              ` • resolvido em ${new Date(h.resolvedAt).toLocaleString("pt-BR")}`}
+                          </p>
+                        </div>
+                        <span
+                          className={`text-[11px] px-2 py-0.5 rounded-full font-semibold border ${getPillColor(h.status)}`}
+                        >
+                          {h.statusLabel || ptLabel(h.status)}
+                        </span>
                       </div>
-                      <span
-                        className={`text-[11px] px-2 py-0.5 rounded-full font-semibold border ${getPillColor(h.status)}`}
-                      >
-                        {ptLabel(h.status)}
-                      </span>
+                      {h.body && <p className="text-xs text-muted-foreground">{h.body}</p>}
                     </div>
-                    {h.body && <p className="text-xs text-muted-foreground">{h.body}</p>}
-                  </div>
-                ))
+                  ))}
+
+                  {/* Pagination controls */}
+                  {historyTotalPages > 1 && (
+                    <div className="flex items-center justify-center gap-2 pt-2">
+                      <button
+                        onClick={() => handlePageChange(historyPage - 1)}
+                        disabled={historyPage <= 1}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-md border border-border bg-card text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                        Anterior
+                      </button>
+                      <span className="text-sm text-muted-foreground px-2">
+                        {historyPage} / {historyTotalPages}
+                      </span>
+                      <button
+                        onClick={() => handlePageChange(historyPage + 1)}
+                        disabled={historyPage >= historyTotalPages}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-md border border-border bg-card text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Próxima
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <p className="text-sm text-muted-foreground">Nenhum evento registrado.</p>
               )}
