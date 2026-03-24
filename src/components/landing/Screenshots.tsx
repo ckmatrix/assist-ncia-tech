@@ -25,7 +25,7 @@ const tabs = [
 const Screenshots = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isPaused, setIsPaused] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  
   const activeTabData = tabs.find(t => t.id === activeTab);
 
   // Auto-rotate tabs every 4 seconds (skip when on video tab)
