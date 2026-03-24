@@ -6,7 +6,23 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { CheckCircle, Clock, AlertCircle, Loader2, Info } from "lucide-react";
+
+interface StatusService {
+  name: string;
+  status: string;
+  label: string;
+  message?: string;
+}
+
+interface StatusData {
+  summary?: { label?: string };
+  services?: StatusService[];
+  updatedAt?: string;
+  generatedAt?: string;
+  plannedUpdates?: string;
+  infoBlocks?: { title?: string; body?: string }[];
+}
 
 interface FooterModalsProps {
   aboutOpen: boolean;
@@ -29,45 +45,64 @@ const FooterModals = ({
   privacyOpen,
   setPrivacyOpen,
 }: FooterModalsProps) => {
+  const [statusData, setStatusData] = useState<StatusData | null>(null);
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [statusError, setStatusError] = useState(false);
+
   useEffect(() => {
     const handleOpenPrivacy = () => setPrivacyOpen(true);
     document.addEventListener('openPrivacyModal', handleOpenPrivacy);
     return () => document.removeEventListener('openPrivacyModal', handleOpenPrivacy);
   }, [setPrivacyOpen]);
 
-  const systemServices = [
-    { name: "Plataforma Web", status: "operational" },
-    { name: "API de Integração", status: "operational" },
-    { name: "Banco de Dados", status: "operational" },
-    { name: "Serviço de Notificações", status: "operational" },
-    { name: "Painel do Cliente", status: "operational" },
-  ];
+  useEffect(() => {
+    if (statusOpen) {
+      setStatusLoading(true);
+      setStatusError(false);
+      fetch('https://api.assistenciatech.com.br/system/status', { cache: 'no-store' })
+        .then(res => res.json())
+        .then(data => {
+          setStatusData(data);
+          setStatusLoading(false);
+        })
+        .catch(() => {
+          setStatusError(true);
+          setStatusLoading(false);
+        });
+    }
+  }, [statusOpen]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "operational":
+      case "OPERATIONAL":
         return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case "degraded":
+      case "DEGRADED":
         return <AlertCircle className="w-4 h-4 text-yellow-500" />;
-      case "down":
+      case "MAINTENANCE":
+        return <Info className="w-4 h-4 text-blue-500" />;
+      case "OUTAGE":
         return <AlertCircle className="w-4 h-4 text-red-500" />;
       default:
         return <Clock className="w-4 h-4 text-muted-foreground" />;
     }
   };
 
-  const getStatusText = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case "operational":
-        return "Operacional";
-      case "degraded":
-        return "Degradado";
-      case "down":
-        return "Fora do ar";
+      case "OPERATIONAL":
+        return "bg-green-500/10 border-green-500/20 text-green-600";
+      case "DEGRADED":
+        return "bg-yellow-500/10 border-yellow-500/20 text-yellow-600";
+      case "MAINTENANCE":
+        return "bg-blue-500/10 border-blue-500/20 text-blue-600";
+      case "OUTAGE":
+        return "bg-red-500/10 border-red-500/20 text-red-600";
       default:
-        return "Verificando...";
+        return "bg-muted/50 border-border text-muted-foreground";
     }
   };
+
+  const allOperational = statusData?.services?.every(s => s.status === "OPERATIONAL");
 
   return (
     <>
