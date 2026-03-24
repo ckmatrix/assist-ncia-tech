@@ -140,36 +140,75 @@ const FooterModals = ({
       <Dialog open={statusOpen} onOpenChange={setStatusOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-2xl">Status do Sistema</DialogTitle>
+            <DialogTitle className="text-2xl">
+              {statusData?.summary?.label || "Status do Sistema"}
+            </DialogTitle>
             <DialogDescription>
               Monitoramento em tempo real dos nossos serviços
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 mt-4">
-            <div className="flex items-center gap-2 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <span className="font-medium text-green-600">Todos os sistemas operacionais</span>
+
+          {statusLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-primary" />
+              <span className="ml-2 text-muted-foreground">Carregando...</span>
             </div>
-            <div className="space-y-2 mt-4">
-              {systemServices.map((service) => (
-                <div
-                  key={service.name}
-                  className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-                >
-                  <span className="text-sm font-medium">{service.name}</span>
-                  <div className="flex items-center gap-2">
-                    {getStatusIcon(service.status)}
-                    <span className="text-sm text-muted-foreground">
-                      {getStatusText(service.status)}
-                    </span>
-                  </div>
+          ) : statusError ? (
+            <div className="flex items-center gap-2 p-3 bg-red-500/10 rounded-lg border border-red-500/20">
+              <AlertCircle className="w-5 h-5 text-red-500" />
+              <span className="font-medium text-red-600">Falha ao carregar status</span>
+            </div>
+          ) : (
+            <div className="space-y-3 mt-4">
+              {allOperational && (
+                <div className="flex items-center gap-2 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="font-medium text-green-600">Todos os sistemas operacionais</span>
                 </div>
-              ))}
+              )}
+              <div className="space-y-2">
+                {statusData?.services?.map((service) => (
+                  <div
+                    key={service.name}
+                    className={`flex items-center justify-between p-3 rounded-lg border ${getStatusColor(service.status)}`}
+                  >
+                    <span className="text-sm font-medium text-foreground">{service.name}</span>
+                    <div className="flex items-center gap-2">
+                      {getStatusIcon(service.status)}
+                      <span className="text-sm">{service.label}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {statusData?.plannedUpdates && (
+                <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                  <p className="text-sm font-semibold text-foreground mb-1">Atualizações planejadas</p>
+                  <p className="text-xs text-muted-foreground">{statusData.plannedUpdates}</p>
+                </div>
+              )}
+
+              {statusData?.infoBlocks && statusData.infoBlocks.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold text-foreground">Mais informações</p>
+                  {statusData.infoBlocks.map((block, i) => (
+                    <div key={i} className="p-3 border rounded-lg bg-card">
+                      <p className="text-sm font-semibold text-foreground mb-1">{block.title || "Informação"}</p>
+                      <p className="text-xs text-muted-foreground">{block.body}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <p className="text-xs text-muted-foreground text-center pt-4">
+                Atualizado em: {statusData?.updatedAt
+                  ? new Date(statusData.updatedAt).toLocaleString("pt-BR")
+                  : statusData?.generatedAt
+                    ? new Date(statusData.generatedAt).toLocaleString("pt-BR")
+                    : new Date().toLocaleString("pt-BR")}
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground text-center pt-4">
-              Última atualização: {new Date().toLocaleString("pt-BR")}
-            </p>
-          </div>
+          )}
         </DialogContent>
       </Dialog>
 
