@@ -9,19 +9,19 @@ const AnnouncementBanner = () => {
   const content = (
     <div className="inline-flex items-center gap-4 mx-8">
       <span className="text-sm md:text-base font-extrabold text-white tracking-wide bg-white/20 px-2 py-0.5 rounded">
-        🚀 Assistência Tech
+        🚀 Lançamento Oficial!
       </span>
       <span className="text-white/60 font-extrabold text-sm md:text-base">—</span>
       <span className="text-sm md:text-base font-medium text-white/90">
-        Sistema para Assistência Técnica com <span className="font-bold text-yellow-300">📋 OS online</span> e <span className="font-bold text-yellow-300">💬 notificações no WhatsApp</span>
+        O <span className="font-bold text-yellow-300">Assistência Tech</span> está no ar!
       </span>
       <span className="text-white/60 font-extrabold text-sm md:text-base">•</span>
       <span className="text-sm md:text-base text-white/90">
-        Mais <span className="font-bold text-yellow-300">✅ controle</span>, mais <span className="font-bold text-yellow-300">⭐ profissionalismo</span> e mais <span className="font-bold text-yellow-300">💚 tranquilidade</span>
+        Os primeiros <span className="font-bold text-yellow-300">20 assinantes</span> ganham <span className="font-bold text-yellow-300">15% de desconto</span> nas <span className="font-bold text-yellow-300">2 primeiras mensalidades</span>
       </span>
       <span className="text-white/60 font-extrabold text-sm md:text-base">•</span>
       <span className="text-sm md:text-base font-bold text-gray-900 bg-yellow-300 px-4 py-1.5 rounded-full shadow-lg border-2 border-yellow-200 hover:bg-yellow-200 transition-all flex items-center gap-2">
-        👉 Quero garantir minha vaga no lançamento ✨
+        👉 Garantir minha vaga agora ✨
       </span>
     </div>
   );
