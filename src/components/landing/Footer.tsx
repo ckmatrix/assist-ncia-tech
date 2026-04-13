@@ -52,8 +52,8 @@ const Footer = () => {
             <div>
               <h4 className="font-semibold mb-4">Suporte</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="text-muted-foreground hover:text-foreground text-sm transition-colors">Central de Ajuda</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground text-sm transition-colors">Documentação</a></li>
+                <li><Link to="/ajuda" className="text-muted-foreground hover:text-foreground text-sm transition-colors">Central de Ajuda</Link></li>
+                <li><Link to="/documentacao" className="text-muted-foreground hover:text-foreground text-sm transition-colors">Documentação</Link></li>
                 <li>
                   <button 
                     onClick={() => setStatusOpen(true)}
