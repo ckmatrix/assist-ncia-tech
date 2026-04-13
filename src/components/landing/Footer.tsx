@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import FooterModals from "./FooterModals";
 import logoAt from "@/assets/logo_at.png";
 
@@ -54,12 +55,12 @@ const Footer = () => {
                 <li><a href="#" className="text-muted-foreground hover:text-foreground text-sm transition-colors">Central de Ajuda</a></li>
                 <li><a href="#" className="text-muted-foreground hover:text-foreground text-sm transition-colors">Documentação</a></li>
                 <li>
-                  <button 
-                    onClick={() => setStatusOpen(true)} 
+                  <Link 
+                    to="/status"
                     className="text-muted-foreground hover:text-foreground text-sm transition-colors"
                   >
                     Status do Sistema
-                  </button>
+                  </Link>
                 </li>
               </ul>
             </div>
