@@ -55,12 +55,12 @@ const Footer = () => {
                 <li><a href="#" className="text-muted-foreground hover:text-foreground text-sm transition-colors">Central de Ajuda</a></li>
                 <li><a href="#" className="text-muted-foreground hover:text-foreground text-sm transition-colors">Documentação</a></li>
                 <li>
-                  <Link 
-                    to="/status"
+                  <button 
+                    onClick={() => setStatusOpen(true)}
                     className="text-muted-foreground hover:text-foreground text-sm transition-colors"
                   >
                     Status do Sistema
-                  </Link>
+                  </button>
                 </li>
               </ul>
             </div>
