@@ -79,7 +79,7 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" className="transition-all duration-300 hover:scale-105" onClick={() => setIsLaunchModalOpen(true)}>Entrar</Button>
+            <Button variant="outline" className="transition-all duration-300 hover:scale-105" onClick={() => setIsLaunchModalOpen(true)}>Entrar</Button>
             <Button variant="hero" className="transition-all duration-300 hover:scale-105" onClick={(e) => { e.preventDefault(); document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); }}>Começar Grátis</Button>
           </div>
 
@@ -130,7 +130,7 @@ const Header = () => {
                 Contato
               </a>
               <div className="flex flex-col gap-2 pt-4">
-                <Button variant="ghost" onClick={() => { setIsLaunchModalOpen(true); setIsMenuOpen(false); }}>Entrar</Button>
+                <Button variant="outline" onClick={() => { setIsLaunchModalOpen(true); setIsMenuOpen(false); }}>Entrar</Button>
                 <Button variant="hero" onClick={() => { document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); setIsMenuOpen(false); }}>Começar Grátis</Button>
               </div>
             </nav>
